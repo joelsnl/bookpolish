@@ -110,8 +110,11 @@ class ModelError(Exception):
 
 @dataclass(frozen=True)
 class Term:
+    """A locked English rendering. `source` is the original-language form."""
+
     canonical: str
     aliases: tuple[str, ...] = ()
+    source: str = ""
 
 
 @dataclass(frozen=True)
@@ -342,7 +345,8 @@ def context_text(segment: Segment, earlier: list[str]) -> str:
         lines.append("terms:")
         for term in segment.terms:
             alias = f" ({', '.join(term.aliases)})" if term.aliases else ""
-            lines.append(f"- {term.canonical}{alias}")
+            source = f"{term.source} = " if term.source else ""
+            lines.append(f"- {source}{term.canonical}{alias}")
     return "\n".join(lines)
 
 
@@ -527,7 +531,9 @@ def _cache_key(model: str, num_ctx: int, segment: Segment, earlier: list[str]) -
         "prev_english": segment.prev_english,
         "next_source": segment.next_source,
         "next_english": segment.next_english,
-        "terms": [(term.canonical, list(term.aliases)) for term in segment.terms],
+        "terms": [
+            (term.canonical, list(term.aliases), term.source) for term in segment.terms
+        ],
         "earlier": earlier,
     }
     raw = json.dumps(payload, ensure_ascii=False, sort_keys=True)
@@ -648,6 +654,49 @@ def preview(segments: list[Segment], db: BookDB, num_ctx: int = 4096) -> list[st
     return shown
 
 
+def _term(item: dict) -> Term:
+    return Term(
+        str(item["canonical"]),
+        tuple(str(alias) for alias in item.get("aliases") or ()),
+        str(item.get("source") or ""),
+    )
+
+
+def load_glossary(path: Path) -> tuple[Term, ...]:
+    """A JSON list of {canonical, aliases?, source?} for the whole book."""
+    data = json.loads(Path(path).read_text(encoding="utf-8-sig"))
+    if not isinstance(data, list):
+        raise ValueError("glossary file must be a JSON list of terms")
+    return tuple(_term(item) for item in data)
+
+
+def _mentions(term: Term, segment: Segment) -> bool:
+    if term.source and term.source in segment.source:
+        return True
+    return any(
+        label and re.search(rf"\b{re.escape(label)}\b", segment.english, re.IGNORECASE)
+        for label in (term.canonical, *term.aliases)
+    )
+
+
+def apply_glossary(segments: list[Segment], glossary: tuple[Term, ...]) -> list[Segment]:
+    """Attach each glossary term to the segments that mention it.
+
+    A term matches on its source form in the source text, or on its English
+    forms in the machine English. Terms already on a segment win.
+    """
+    applied: list[Segment] = []
+    for segment in segments:
+        have = {term.canonical.casefold() for term in segment.terms}
+        extra = tuple(
+            term
+            for term in glossary
+            if term.canonical.casefold() not in have and _mentions(term, segment)
+        )
+        applied.append(replace(segment, terms=segment.terms + extra) if extra else segment)
+    return applied
+
+
 def load_chapter(path: Path) -> list[Segment]:
     data = json.loads(Path(path).read_text(encoding="utf-8-sig"))
     if "book_key" not in data or "segments" not in data:
@@ -655,10 +704,7 @@ def load_chapter(path: Path) -> list[Segment]:
     book_key = str(data["book_key"])
     loaded: list[Segment] = []
     for item in data["segments"]:
-        terms = tuple(
-            Term(str(term["canonical"]), tuple(term.get("aliases") or ()))
-            for term in item.get("terms") or []
-        )
+        terms = tuple(_term(term) for term in item.get("terms") or [])
         loaded.append(
             Segment(
                 book_key=book_key,

@@ -18,8 +18,10 @@ from bookpolish.engine import (  # noqa: E402
     Term,
     _sentences,
     accept_edit,
+    apply_glossary,
     context_text,
     load_chapter,
+    load_glossary,
     parse_labels,
     polish,
     preview,
@@ -171,6 +173,51 @@ class GateTests(unittest.TestCase):
         run = polish([Segment("book", "s", 1, english)], client=Fake(flipped), db=self.db)
         self.assertEqual(run.edits[0].reason, "fallback")
         self.assertEqual(run.edits[0].english, english)
+
+    def test_glossary_term_locks_agarwood(self):
+        # The 35B run accepted this swap with no glossary attached.
+        machine = "The air smelled of old paper, mixed with a hint of agarwood."
+        polished = "The air smelled of old paper, mixed with a hint of sandalwood."
+        segment = Segment("book", "c1-p3", 1, machine, source="混雜著淡淡的沉香。")
+        [glossed] = apply_glossary([segment], (Term("agarwood", source="沉香"),))
+        self.assertTrue(accept_edit(machine, polished, segment.terms))
+        self.assertFalse(accept_edit(machine, polished, glossed.terms))
+
+    def test_glossary_matches_source_or_english_only(self):
+        agarwood = Term("agarwood", source="沉香")
+        stones = Term("spirit stones", ("spiritual stones",))
+        segments = [
+            Segment("book", "a", 1, "A faint scent.", source="淡淡的沉香"),
+            Segment("book", "b", 1, "Ten low-grade spiritual stones.", source="十塊下品靈石"),
+            Segment("book", "c", 1, "Ye Xuan yawned.", source="葉玄打了個哈欠"),
+        ]
+        glossed = apply_glossary(segments, (agarwood, stones))
+        self.assertEqual([seg.terms for seg in glossed], [(agarwood,), (stones,), ()])
+
+    def test_glossary_does_not_duplicate_segment_terms(self):
+        segment = Segment("book", "s", 1, "Mira waited.", terms=(MIRA,))
+        [glossed] = apply_glossary([segment], (Term("Mira", source="米拉"),))
+        self.assertEqual(glossed.terms, (MIRA,))
+
+    def test_glossary_reaches_the_prompt(self):
+        segment = Segment("book", "s", 1, "A hint of agarwood.", source="沉香")
+        [glossed] = apply_glossary([segment], (Term("agarwood", source="沉香"),))
+        self.assertIn("- 沉香 = agarwood", context_text(glossed, []))
+
+    def test_load_glossary_reads_a_list(self):
+        path = Path(self.tmp.name) / "glossary.json"
+        path.write_text(
+            '[{"canonical": "agarwood", "source": "沉香"}, '
+            '{"canonical": "Jiang Kai", "aliases": ["Jiang"]}]',
+            encoding="utf-8",
+        )
+        self.assertEqual(
+            load_glossary(path),
+            (Term("agarwood", (), "沉香"), Term("Jiang Kai", ("Jiang",))),
+        )
+        path.write_text('{"canonical": "agarwood"}', encoding="utf-8")
+        with self.assertRaises(ValueError):
+            load_glossary(path)
 
     def test_labels_map_by_id(self):
         text = "[2] Jiang Kai looked down.\n[1] Jiang Kai looked up."

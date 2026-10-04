@@ -8,7 +8,17 @@ import json
 import sys
 from pathlib import Path
 
-from bookpolish.engine import POLICY, BookDB, Run, Server, load_chapter, polish, preview
+from bookpolish.engine import (
+    POLICY,
+    BookDB,
+    Run,
+    Server,
+    apply_glossary,
+    load_chapter,
+    load_glossary,
+    polish,
+    preview,
+)
 
 
 def _default_db() -> Path:
@@ -48,11 +58,14 @@ def main(argv: list[str] | None = None) -> int:
     run.add_argument("--db", default="")
     run.add_argument("--timeout", type=float, default=180)
     run.add_argument("--print-prompt", action="store_true")
+    run.add_argument("--glossary", help="JSON list of book-wide terms")
     args = parser.parse_args(argv)
     if args.ctx < 1:
         print("ctx must be positive", file=sys.stderr)
         return 2
     segments = load_chapter(Path(args.chapter))
+    if args.glossary:
+        segments = apply_glossary(segments, load_glossary(Path(args.glossary)))
     with BookDB(Path(args.db) if args.db else _default_db()) as db:
         if args.print_prompt:
             for block in preview(segments, db, num_ctx=args.ctx):

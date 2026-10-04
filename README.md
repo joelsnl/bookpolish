@@ -35,6 +35,10 @@ Timeouts, connection errors, and HTTP 429/5xx are retried twice with backoff bef
 
 An attached term is listed in the prompt (`沉香 = agarwood`) and locked by the gate: an edit that drops it falls back to the machine line.
 
+## Verification (optional)
+
+The regex gates cannot see a noun that now means something else (agarwood → sandalwood) or an invented detail. `--verify URL --verify-model NAME` sends each sentence that passed the gates and changed to a System One judge at `URL` (`POST /v1/systemone`), and keeps the machine line when the judge flags it. Kev and Laya serve that contract locally; hosted Jev works with `TYPESAFE_API_KEY`. Off by default, because no open judge yet matches Jev zero-shot on this task. See `reports/research-program.md`, and score a judge with `python scripts/eval_judge.py URL NAME` before trusting its threshold.
+
 ## Output
 
 Each edit carries `reason` (`edited`, `unchanged`, `fallback`, `skipped`, `error`, `not-run`) and per-sentence counts. A `fallback` paragraph with `sentences.edited > 0` still carries the sentences that passed. `summary` counts edits by reason.

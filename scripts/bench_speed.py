@@ -55,10 +55,12 @@ def server_rates(log: Path) -> dict:
     text = log.read_text(encoding="utf-8", errors="replace")
     prompt = [float(x) for x in re.findall(r"prompt eval time.*?([\d.]+) tokens per second", text)]
     gen = [float(x) for x in re.findall(r"\beval time.*?([\d.]+) tokens per second", text)]
-    draft = re.findall(r"draft acceptance rate = ([\d.]+)", text)
+    draft = [(int(a), int(d)) for a, d in
+             re.findall(r"\(\s*(\d+) accepted /\s*(\d+) generated\)", text)]
+    drafted = sum(d for _, d in draft)
     mean = lambda xs: round(sum(xs) / len(xs), 1) if xs else None  # noqa: E731
     return {"prompt_tps": mean(prompt), "gen_tps": mean(gen),
-            "draft_acceptance": mean([float(x) for x in draft])}
+            "draft_acceptance": round(sum(a for a, _ in draft) / drafted, 3) if drafted else None}
 
 
 def main(argv: list[str]) -> int:

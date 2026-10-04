@@ -16,6 +16,17 @@ The local server should expose `POST /v1/chat/completions`. Evidence and the edi
 
 `--ctx` is the model context length in tokens (default 4096). A span that does not fit is left unchanged and is not sent. The estimate counts each CJK character as a token and other text as four characters per token.
 
+## Fast setup
+
+On a 12 GB GPU, this server setup doubles throughput with no change in what gets edited (`reports/speed-and-verification.md`):
+
+```bash
+llama-server -m gemma-4-E4B-it-qat-UD-Q4_K_XL.gguf --host 127.0.0.1 --port 8080 -c 8192 --reasoning off -fit on -fa on --jinja -np 8 --spec-type draft-mtp -md mtp-gemma-4-E4B-it.gguf --spec-draft-n-max 6
+python -m bookpolish run book.json -o out.json --workers 8
+```
+
+`python scripts/export_huaepub.py BOOK_URL -o book.json` builds a chapter file from a HuaEPUB library cache.
+
 ## Workers
 
 `--workers N` keeps N requests in flight against one server. Match it to the server's parallel slots (llama.cpp `-np`, default 4). Every segment is ingested in narrative order before any request, so earlier-source memory and the cache are the same as a one-worker run. Results are written in narrative order. If the server fails, no new segment starts; segments already in flight keep their edits, and the rest are marked `not-run`. A rerun with the same `--db` picks up from the cache.
@@ -47,7 +58,7 @@ python -m bookpolish run chapter.json -o edited.json --workers 8      # editor l
 python -m bookpolish verify chapter.json edited.json -o final.json --verify http://127.0.0.1:8009 --verify-model kev-4b
 ```
 
-`run --verify URL --verify-model NAME` does both in one process when a small judge fits beside the editor. Verdicts are cached by judge name, so an interrupted pass resumes. If the judge fails, every edit it had not checked falls back to its machine line (`not-run`). Off by default, because no open judge yet matches Jev zero-shot on this task: score one with `python scripts/eval_judge.py URL NAME` before trusting its threshold (`reports/research-program.md`).
+`run --verify URL --verify-model NAME` does both in one process when a small judge fits beside the editor. Verdicts are cached by judge name, so an interrupted pass resumes. If the judge fails, every edit it had not checked falls back to its machine line (`not-run`). Off by default, and experimental. On a full novel the self-judge mostly flagged corrections of a wrong machine line ("infant" → "Nascent Soul" for 元嬰), because its default questions compare the edit with the machine English. Score any judge with `python scripts/eval_judge.py URL NAME [--kind chat]` and check its `fix-flagged` column before trusting it (`reports/speed-and-verification.md`).
 
 ## Output
 

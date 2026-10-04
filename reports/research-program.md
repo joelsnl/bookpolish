@@ -30,7 +30,8 @@ Every run reports what it changed and why the rest was kept.
 | Regex gate false rejects on two recorded runs | 34 of 3,934 accepted edits (0.9%) |
 | Drift the regex gates still let through | about 3% of accepted edits (5 of the 11 Jev flagged out of 200 sampled; read by hand) |
 | Jev as a second judge, threshold 0.7 | 9/11 real misses, 50/60 noun swaps, 4/193 good edits flagged; AUC 0.983 |
-| Free local judges | The editor itself (Gemma 4 E4B, logprobs, 2 questions) AUC 0.966; Winnow-12B Q4 (logprobs, 4 questions) AUC 0.939 and 10/11 real misses; together they match Jev's recall with ~2× its false flags (4–6% of good edits, each of which just keeps the machine line) |
+| Free local judges | The editor itself (Gemma 4 E4B, logprobs) AUC 0.966 and Winnow-12B Q4 AUC 0.939 on the judge set. On a full novel, though, 15 of 16 sampled self-judge flags were corrections toward the Chinese: questions anchored to the machine English revert good fixes. Verification stays off by default (`reports/speed-and-verification.md`) |
+| Full novel, 60 chapters, 4,116 paragraphs | 13.1 min to edit at 314 paragraphs/min (book 111022) |
 | Other open judges zero-shot | Kev-4B AUC 0.909 but 3 s per item and fills the GPU; Kev-0.8B 0.74; Laya near chance |
 | Speed on the 1,837-paragraph benchmark | 150.8 → **306.6 paragraphs/min (2.03×)** with 8 slots + Gemma MTP drafting 6 tokens; outcome counts unchanged within noise |
 
@@ -102,14 +103,30 @@ Jev proved a second judge catches what regex cannot: agarwood→sandalwood, inve
 
 Values are AUC per question; 0.5 is chance.
 
-**Shipped stack:** edit with Gemma, then run `verify` with Gemma on "changed thing" and "added claim" (threshold 0.5) through the same server. Optionally run a second `verify` with Winnow on all four questions after unloading Gemma. Gemma ≥ 0.5 or Winnow ≥ 0.7 caught 10/11 real misses, 51/60 noun swaps, and 5/5 sampled drift, and flagged 12/193 good edits. Jev at 0.7 caught 9/11, 50/60, and 5/5, and flagged 4/193.
+**What the full novel showed.**
 
-Open work:
+- On the judge set, Gemma ≥ 0.5 or Winnow ≥ 0.7 caught 10/11 real misses and 51/60 noun swaps, and flagged 12/193 good edits. That looks like Jev.
+- On book 111022, the self-judge flagged 7.6% of edits. 15 of 16 sampled were corrections of a wrong machine line (元嬰 infant → Nascent Soul, 星宮 constellation → Star Palace).
+- The first four questions ask about a change *relative to the machine English*, and a fix is a change.
+- The judge set now holds those 16 items (`kind=correction`), and `eval_judge.py` reports how many good corrections a judge reverts (`fix-flagged`).
 
-1. **Fewer false flags.** The local stack flags 2–3× more good edits than Jev.
-   - Tune per-question thresholds on a larger judge set.
-   - Run Winnow through its own `/v1/systemone` server (patched llama.cpp: Linux/WSL, or a CUDA build on Windows), which reads answers the way it was trained.
-   - Try Winnow Q5/Q6 if they fit.
+**Source-anchored questions** (`less_faithful`, `adds_to_source`):
+
+| Rule | Real misses | Swaps | Good edits flagged | Corrections reverted |
+|---|---:|---:|---:|---:|
+| Gemma thing/claim ≥ 0.5 AND less_faithful ≥ 0.5 | 4/11 | 22/60 | 1/193 | 0/15 |
+| Winnow thing/claim ≥ 0.5 AND less_faithful ≥ 0.7 | 4/11 | 42/60 | 5/193 | 0/15 |
+
+They stop reverting fixes, but lose most real misses.
+
+Open work, in order:
+
+1. **A judge that spares corrections and still catches drift.** This is the main open problem.
+   - Rule search over the six questions per judge (AND/OR, per-question thresholds).
+   - Few-shot examples of "correction toward source" in the chat judge's prompt.
+   - A comparative prompt that shows both lines and asks which is more faithful.
+   - Run Winnow through its own `/v1/systemone` server (patched llama.cpp: Linux/WSL, or a CUDA build on Windows).
+   - Grow the `correction` and `real` sets past 100 each before trusting any rule (Track D).
 2. **Distil Jev into a small open judge.** While the trial lasts:
    - Label 3,000–5,000 accepted edits with Jev. That is about $0.10 at the published price.
    - Fine-tune Kev-0.8B (LoRA; `kev.train`) or Laya (ModernBERT, ~421M) on those labels.
@@ -191,3 +208,7 @@ This is the autoresearch loop: one variable, one fixed benchmark, keep or discar
 | S6 | 16 slots, -c 16384 | 237.7 /min, below 8 slots: compute-bound, not cache-bound | discard |
 | S7 | 8 slots + Gemma MTP, 6 drafted | **306.6 /min (2.03×)**, 69% acceptance, outcomes within noise | keep: recommended server config |
 | S8 | 4 slots + Gemma MTP, 6 drafted | 161.0 /min | speculation pays off only with 8 slots |
+| D1 | Full novel 111022, S7 server, edit + Gemma self-verify + Winnow verify | edit 13.1 min; Gemma flagged 160/2,096 (4.1 min), Winnow 98 more (18.8 min); sampled flags mostly corrections toward the Chinese | verification stays opt-in |
+| J7 | Source-anchored questions (less_faithful, adds_to_source) | AND with thing/claim: 0/15 corrections reverted, but real misses 4/11 | promising, not shipped |
+| G4 | Discourse openers and pronouns not locked as names | 95 of 886 rejections in book 111022 recovered, all 12 sampled good; recall unchanged within noise | keep (bookpolish-4) |
+| G4a | Unlock any sentence opener the book also uses in lowercase | 138 recovered, but ~25% of a sample was drift; name recall −3 points | discard |

@@ -259,7 +259,9 @@ class FakeChat(BaseHTTPRequestHandler):
         pass
 
 
-class CliTests(unittest.TestCase):
+class FakeChatServer(unittest.TestCase):
+    """Starts FakeChat per test; holds no tests of its own."""
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), FakeChat)
@@ -272,6 +274,8 @@ class CliTests(unittest.TestCase):
         self.httpd.server_close()
         self.tmp.cleanup()
 
+
+class CliTests(FakeChatServer):
     def test_run_end_to_end_with_workers_and_glossary(self):
         chapter = Path(self.tmp.name) / "chapter.json"
         chapter.write_text(
@@ -348,3 +352,78 @@ class CliTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FakeJudge(BaseHTTPRequestHandler):
+    """System One server that flags any edit mentioning 'thick'."""
+
+    def do_POST(self):
+        body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+        value = 0.9 if "thick" in body["state"]["edited_english"] else 0.1
+        answers = {key: {"type": "noul", "noul": value} for key in body["questions"]}
+        data = json.dumps({"answers": answers}).encode()
+        self.send_response(200)
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+
+    def log_message(self, *args):
+        pass
+
+
+class TwoPassCliTests(FakeChatServer):
+    def test_run_then_verify_with_the_editor_unloaded(self):
+        chapter = Path(self.tmp.name) / "chapter.json"
+        chapter.write_text(
+            json.dumps(
+                {
+                    "book_key": "demo",
+                    "segments": [
+                        {"id": "p0", "chapter": 1, "source": "源", "english": "The air is thick."},
+                        {"id": "p1", "chapter": 1, "source": "源", "english": "The voice is soft."},
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        db = str(Path(self.tmp.name) / "db.sqlite")
+        first = Path(self.tmp.name) / "first.json"
+        with mock.patch("bookpolish.engine.RETRY_DELAY", 0):
+            self.assertEqual(
+                main(["run", str(chapter), "-o", str(first), "--host", self.host, "--db", db]), 0
+            )
+        self.httpd.shutdown()  # the editor is gone before the judge starts
+        judge = ThreadingHTTPServer(("127.0.0.1", 0), FakeJudge)
+        threading.Thread(target=judge.serve_forever, daemon=True).start()
+        final = Path(self.tmp.name) / "final.json"
+        try:
+            code = main(
+                [
+                    "verify", str(chapter), str(first), "-o", str(final), "--db", db,
+                    "--verify", f"http://127.0.0.1:{judge.server_address[1]}",
+                    "--verify-model", "fake-judge",
+                ]
+            )
+        finally:
+            judge.shutdown()
+            judge.server_close()
+        self.assertEqual(code, 0)
+        edits = json.loads(final.read_text(encoding="utf-8"))["edits"]
+        self.assertEqual(
+            [(e["english"], e["reason"]) for e in edits],
+            [("The air is thick.", "fallback"), ("The voice was soft.", "edited")],
+        )
+        self.assertEqual(edits[0]["sentences"]["flagged"], 1)
+
+    def test_verify_refuses_an_unfinished_run(self):
+        chapter = ROOT / "fixtures" / "chapter.json"
+        partial = Path(self.tmp.name) / "partial.json"
+        partial.write_text(
+            json.dumps({"edits": [{"id": "c1-p1", "english": "x", "accepted": False,
+                                   "reason": "not-run", "model": "m", "policy": "p"}]}),
+            encoding="utf-8",
+        )
+        with redirect_stderr(io.StringIO()):
+            code = main(["verify", str(chapter), str(partial), "--verify",
+                         "http://127.0.0.1:9", "--verify-model", "j"])
+        self.assertEqual(code, 2)

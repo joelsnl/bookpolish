@@ -1,4 +1,4 @@
-"""The optional verifier stage, with a fake judge and a mocked Jev endpoint."""
+"""The verify pass, with a fake judge and a mocked System One endpoint."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from bookpolish.engine import BookDB, ModelError, Segment, polish  # noqa: E402
+from bookpolish.engine import BookDB, ModelError, Segment, polish, verify_edits  # noqa: E402
 from bookpolish.verify import HOSTED_JEV, SystemOneVerifier  # noqa: E402
 
 
@@ -51,21 +51,31 @@ ENGLISH = "The room smelled of agarwood. Ye Xuan is asleep. She is calm."
 REPLY = "[1] The room smelled of sandalwood.\n[2] Ye Xuan was asleep.\n[3] He is calm."
 
 
-class VerifierStageTests(unittest.TestCase):
+class VerifierPassTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.db = BookDB(Path(self.tmp.name) / "t.sqlite")
+        self.segment = Segment("b", "s", 1, ENGLISH, source="沉香")
 
     def tearDown(self):
         self.db.close()
         self.tmp.cleanup()
 
-    def run_one(self, judge):
-        segment = Segment("b", "s", 1, ENGLISH, source="沉香")
-        return polish([segment], client=Editor(REPLY), db=self.db, verifier=judge)
+    def edit_then_verify(self, judge):
+        run = polish([self.segment], client=Editor(REPLY), db=self.db)
+        return verify_edits([self.segment], run.edits, verifier=judge, db=self.db)
+
+    def test_editing_records_each_sentence(self):
+        edit = polish([self.segment], client=Editor(REPLY), db=self.db).edits[0]
+        self.assertEqual(
+            [outcome for _, _, outcome in edit.sentences], ["edited", "edited", "fallback"]
+        )
+        cached = polish([self.segment], client=Editor(REPLY), db=self.db).edits[0]
+        self.assertTrue(cached.cached)
+        self.assertEqual(cached.sentences, edit.sentences)
 
     def test_flagged_edit_keeps_machine_english(self):
-        edit = self.run_one(Judge()).edits[0]
+        edit = self.edit_then_verify(Judge()).edits[0]
         self.assertEqual(
             edit.english, "The room smelled of agarwood. Ye Xuan was asleep. She is calm."
         )
@@ -76,25 +86,44 @@ class VerifierStageTests(unittest.TestCase):
 
     def test_only_gate_accepted_changes_are_checked(self):
         judge = Judge()
-        self.run_one(judge)
+        self.edit_then_verify(judge)
         # "He is calm." failed the pronoun gate; it never reaches the judge.
         self.assertEqual(
             [edited for _, edited in judge.asked],
             ["The room smelled of sandalwood.", "Ye Xuan was asleep."],
         )
 
-    def test_judge_failure_stops_the_run(self):
-        run = self.run_one(Judge(fail=True))
+    def test_judge_failure_never_ships_an_unchecked_edit(self):
+        run = self.edit_then_verify(Judge(fail=True))
         self.assertEqual(run.error, "judge down")
-        self.assertEqual(run.edits[0].reason, "error")
+        self.assertEqual(run.edits[0].reason, "not-run")
+        self.assertEqual(run.edits[0].english, ENGLISH)
 
-    def test_verifier_is_part_of_the_cache_key(self):
-        self.run_one(None)
+    def test_unedited_paragraphs_pass_through_untouched(self):
+        plain = Segment("b", "p", 1, "Mira waited.")
+        echo = Editor("[1] Mira waited.")
+        run = polish([plain], client=echo, db=self.db)
         judge = Judge()
-        edit = self.run_one(judge).edits[0]
-        self.assertFalse(edit.cached)
-        self.assertTrue(judge.asked)
-        self.assertTrue(self.run_one(Judge()).edits[0].cached)
+        checked = verify_edits([plain], run.edits, verifier=judge, db=self.db)
+        self.assertEqual(checked.edits, run.edits)
+        self.assertEqual(judge.asked, [])
+
+    def test_verdicts_are_cached_so_a_rerun_asks_nothing(self):
+        self.edit_then_verify(Judge())
+        again = Judge()
+        edit = self.edit_then_verify(again).edits[0]
+        self.assertEqual(again.asked, [])
+        self.assertEqual(edit.sentences_flagged, 1)
+
+    def test_a_different_judge_asks_again(self):
+        self.edit_then_verify(Judge())
+
+        class Other(Judge):
+            name = "judge-v2"
+
+        other = Other()
+        self.edit_then_verify(other)
+        self.assertEqual(len(other.asked), 2)
 
 
 def jev_reply(value: float):

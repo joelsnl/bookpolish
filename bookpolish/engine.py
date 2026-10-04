@@ -153,6 +153,9 @@ class Edit:
     sentences_skipped: int = 0
     # Passed the regex gates, then rejected by the verifier.
     sentences_flagged: int = 0
+    # (machine, model output, outcome) per sentence, in order. Outcome is
+    # edited, unchanged, fallback, skipped, or flagged. A verify pass reads it.
+    sentences: tuple[tuple[str, str, str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -178,9 +181,9 @@ class Client(Protocol):
 class Verifier(Protocol):
     """A second check on edits that passed accept_edit.
 
-    `name` goes into the cache key. `check` returns True for each
+    `name` keys cached verdicts. `check` returns True for each
     (machine, edited) pair that keeps its meaning and raises ModelError when
-    it cannot answer, which stops the run like a model failure.
+    it cannot answer, which stops the verify pass like a model failure.
     """
 
     @property
@@ -475,6 +478,10 @@ class BookDB:
                 reason text not null,
                 model text not null
             );
+            create table if not exists verdicts (
+                key text primary key,
+                ok integer not null
+            );
             """
         )
         # Databases from 0.1.0 predate the sentence counts.
@@ -484,6 +491,8 @@ class BookDB:
                 self.conn.execute(
                     f"alter table cache add column {column} integer not null default 0"
                 )
+        if "sentences" not in columns:
+            self.conn.execute("alter table cache add column sentences text not null default '[]'")
         self.conn.commit()
 
     def close(self) -> None:
@@ -555,22 +564,24 @@ class BookDB:
 
     def get_cached(self, key: str, segment_id: str) -> Edit | None:
         row = self.conn.execute(
-            f"select english, accepted, reason, model, {', '.join(_COUNT_COLUMNS)} "
-            "from cache where key = ?",
+            f"select english, accepted, reason, model, {', '.join(_COUNT_COLUMNS)}, "
+            "sentences from cache where key = ?",
             (key,),
         ).fetchone()
         if row is None:
             return None
+        sentences = tuple(tuple(item) for item in json.loads(row[-1]))
         return Edit(
-            segment_id, row[0], bool(row[1]), row[2], row[3], POLICY, True, *row[4:]
+            segment_id, row[0], bool(row[1]), row[2], row[3], POLICY, True, *row[4:-1],
+            sentences=sentences,
         )
 
     def put_cached(self, key: str, edit: Edit) -> None:
         self.conn.execute(
             f"""
             insert or replace into cache (
-                key, english, accepted, reason, model, {', '.join(_COUNT_COLUMNS)}
-            ) values (?, ?, ?, ?, ?, {', '.join('?' * len(_COUNT_COLUMNS))})
+                key, english, accepted, reason, model, {', '.join(_COUNT_COLUMNS)}, sentences
+            ) values (?, ?, ?, ?, ?, {', '.join('?' * len(_COUNT_COLUMNS))}, ?)
             """,
             (
                 key,
@@ -579,21 +590,37 @@ class BookDB:
                 edit.reason,
                 edit.model,
                 *(getattr(edit, column) for column in _COUNT_COLUMNS),
+                json.dumps(edit.sentences, ensure_ascii=False),
             ),
         )
         self.conn.commit()
 
+    def get_verdicts(self, keys: list[str]) -> dict[str, bool]:
+        found: dict[str, bool] = {}
+        for start in range(0, len(keys), 500):
+            batch = keys[start : start + 500]
+            marks = ",".join("?" * len(batch))
+            for key, ok in self.conn.execute(
+                f"select key, ok from verdicts where key in ({marks})", batch
+            ):
+                found[key] = bool(ok)
+        return found
 
-def _cache_key(
-    model: str, num_ctx: int, segment: Segment, earlier: list[str], verifier: str = ""
-) -> str:
+    def put_verdicts(self, verdicts: dict[str, bool]) -> None:
+        self.conn.executemany(
+            "insert or replace into verdicts (key, ok) values (?, ?)",
+            [(key, int(ok)) for key, ok in verdicts.items()],
+        )
+        self.conn.commit()
+
+
+def _cache_key(model: str, num_ctx: int, segment: Segment, earlier: list[str]) -> str:
     payload = {
         "policy": POLICY,
         "system": SYSTEM,
         "temperature": TEMPERATURE,
         "model": model,
         "num_ctx": num_ctx,
-        "verifier": verifier,
         "book_key": segment.book_key,
         "segment_id": segment.segment_id,
         "chapter": segment.chapter,
@@ -612,8 +639,15 @@ def _cache_key(
     return hashlib.sha256(raw.encode()).hexdigest()
 
 
-def _finish(segment: Segment, pieces: list[str], reasons: list[str], model: str) -> Edit:
-    """Fold per-sentence reasons into one paragraph edit."""
+def _finish(
+    segment: Segment, sentences: list[tuple[str, str, str]], model: str, cached: bool = False
+) -> Edit:
+    """Fold per-sentence (machine, output, outcome) into one paragraph edit."""
+    reasons = [outcome for _, _, outcome in sentences]
+    pieces = [
+        output if outcome in ("edited", "unchanged") else machine
+        for machine, output, outcome in sentences
+    ]
     counts = {
         "sentences_edited": reasons.count("edited"),
         "sentences_rejected": reasons.count("fallback"),
@@ -638,7 +672,10 @@ def _finish(segment: Segment, pieces: list[str], reasons: list[str], model: str)
         else:
             reason = "edited"
         accepted = reason == "edited"
-    return Edit(segment.segment_id, english, accepted, reason, model, POLICY, **counts)
+    return Edit(
+        segment.segment_id, english, accepted, reason, model, POLICY, cached,
+        sentences=tuple(sentences), **counts,
+    )
 
 
 def _memory(db: BookDB, segment: Segment, ordinal: int) -> list[str]:
@@ -656,42 +693,26 @@ class _Job:
     packs: list[Pack]
 
 
-def _generate(
-    segment: Segment, job: _Job, client: Client, verifier: Verifier | None = None
-) -> Edit:
+def _generate(segment: Segment, job: _Job, client: Client) -> Edit:
     """Send each pack and gate each sentence. Touches no database state."""
-    pieces: list[str] = []
-    reasons: list[str] = []
+    sentences: list[tuple[str, str, str]] = []
     for pack in job.packs:
         if not pack.send:
-            pieces.extend(pack.pieces)
-            reasons.extend(["skipped"] * len(pack.pieces))
+            sentences.extend((piece, piece, "skipped") for piece in pack.pieces)
             continue
         prompt = user_prompt(job.context, pack.pieces)
         raw = client.generate(SYSTEM, prompt, output_tokens(pack.pieces))
         parsed = parse_labels(raw, len(pack.pieces))
         if parsed is None:
-            pieces.extend(pack.pieces)
-            reasons.extend(["fallback"] * len(pack.pieces))
+            sentences.extend((piece, piece, "fallback") for piece in pack.pieces)
             continue
-        outcomes = [
-            ("edited" if output.strip() != source.strip() else "unchanged")
-            if accept_edit(source, output, segment.terms)
-            else "fallback"
-            for source, output in zip(pack.pieces, parsed, strict=True)
-        ]
-        edited = [i for i, outcome in enumerate(outcomes) if outcome == "edited"]
-        if verifier is not None and edited:
-            verdicts = verifier.check(
-                segment.source, [(pack.pieces[i], parsed[i]) for i in edited]
-            )
-            for i, kept in zip(edited, verdicts, strict=True):
-                if not kept:
-                    outcomes[i] = "flagged"
-        for source, output, outcome in zip(pack.pieces, parsed, outcomes, strict=True):
-            pieces.append(output if outcome in ("edited", "unchanged") else source)
-            reasons.append(outcome)
-    return _finish(segment, pieces, reasons, client.model)
+        for source, output in zip(pack.pieces, parsed, strict=True):
+            if not accept_edit(source, output, segment.terms):
+                outcome = "fallback"
+            else:
+                outcome = "edited" if output.strip() != source.strip() else "unchanged"
+            sentences.append((source, output, outcome))
+    return _finish(segment, sentences, client.model)
 
 
 def _plan_jobs(
@@ -700,7 +721,6 @@ def _plan_jobs(
     db: BookDB,
     num_ctx: int,
     edits: list[Edit | None],
-    verifier: str = "",
 ) -> list[_Job]:
     """Ingest every segment in narrative order and fill cached edits.
 
@@ -711,7 +731,7 @@ def _plan_jobs(
     for index, segment in enumerate(segments):
         ordinal = db.ingest(segment)
         earlier = _memory(db, segment, ordinal)
-        key = _cache_key(model, num_ctx, segment, earlier, verifier)
+        key = _cache_key(model, num_ctx, segment, earlier)
         cached = db.get_cached(key, segment.segment_id)
         if cached is not None:
             edits[index] = cached
@@ -733,7 +753,6 @@ def polish(
     num_ctx: int = 4096,
     close_client: bool = False,
     workers: int = 1,
-    verifier: Verifier | None = None,
 ) -> Run:
     """Edit segments. List order is narrative order.
 
@@ -741,17 +760,13 @@ def polish(
     written in list order on the calling thread. After a ModelError no new
     segment starts. Segments already in flight finish and keep their edits,
     and segments never started are marked "not-run".
-
-    A verifier, when given, re-checks every sentence the regex gates accepted
-    as changed; a flagged sentence keeps its machine English.
     """
     if workers < 1:
         raise ValueError("workers must be at least 1")
     try:
         model = client.model
         edits: list[Edit | None] = [None] * len(segments)
-        verifier_name = verifier.name if verifier is not None else ""
-        jobs = iter(_plan_jobs(segments, model, db, num_ctx, edits, verifier_name))
+        jobs = iter(_plan_jobs(segments, model, db, num_ctx, edits))
         error: str | None = None
         with ThreadPoolExecutor(max_workers=workers) as pool:
             window: deque[tuple[_Job, Future[Edit]]] = deque()
@@ -761,8 +776,7 @@ def polish(
                     job = next(jobs, None)
                     if job is None:
                         return
-                    future = pool.submit(_generate, segments[job.index], job, client, verifier)
-                    window.append((job, future))
+                    window.append((job, pool.submit(_generate, segments[job.index], job, client)))
 
             fill()
             while window:
@@ -787,6 +801,98 @@ def polish(
     finally:
         if close_client:
             client.close()
+
+
+def _verdict_key(verifier: Verifier, source: str, machine: str, edited: str) -> str:
+    raw = json.dumps([verifier.name, source, machine, edited], ensure_ascii=False)
+    return hashlib.sha256(raw.encode()).hexdigest()
+
+
+def verify_edits(
+    segments: list[Segment],
+    edits: list[Edit],
+    *,
+    verifier: Verifier,
+    db: BookDB,
+    workers: int = 4,
+) -> Run:
+    """Second pass: re-check every sentence the regex gates accepted as changed.
+
+    Runs after polish, with only the judge loaded if the editor and judge do not
+    fit together. A flagged sentence keeps its machine English. Verdicts are
+    cached by judge name and text, so an interrupted pass resumes. If the judge
+    fails, no new segment is checked, and every edit still holding an unchecked
+    change falls back to its machine English with reason "not-run": an edit is
+    never shipped unverified.
+    """
+    if workers < 1:
+        raise ValueError("workers must be at least 1")
+    by_id = {segment.segment_id: segment for segment in segments}
+    keys: dict[int, list[str | None]] = {}
+    for index, edit in enumerate(edits):
+        segment = by_id[edit.segment_id]
+        keys[index] = [
+            _verdict_key(verifier, segment.source, machine, output)
+            if outcome == "edited"
+            else None
+            for machine, output, outcome in edit.sentences
+        ]
+    known = db.get_verdicts([key for row in keys.values() for key in row if key])
+    todo = [index for index, row in keys.items() if any(k and k not in known for k in row)]
+    error: str | None = None
+
+    def ask(index: int) -> dict[str, bool]:
+        edit = edits[index]
+        wanted = [
+            (key, machine, output)
+            for key, (machine, output, _) in zip(keys[index], edit.sentences, strict=True)
+            if key and key not in known
+        ]
+        verdicts = verifier.check(
+            by_id[edit.segment_id].source, [(machine, output) for _, machine, output in wanted]
+        )
+        return {key: ok for (key, _, _), ok in zip(wanted, verdicts, strict=True)}
+
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        pending = iter(todo)
+        window: deque[Future[dict[str, bool]]] = deque()
+
+        def fill() -> None:
+            while error is None and len(window) < workers:
+                index = next(pending, None)
+                if index is None:
+                    return
+                window.append(pool.submit(ask, index))
+
+        fill()
+        while window:
+            try:
+                found = window.popleft().result()
+            except ModelError as exc:
+                error = error or str(exc)
+                continue
+            db.put_verdicts(found)
+            known.update(found)
+            fill()
+
+    checked: list[Edit] = []
+    for index, edit in enumerate(edits):
+        row = keys[index]
+        segment = by_id[edit.segment_id]
+        if any(key and key not in known for key in row):
+            checked.append(
+                Edit(edit.segment_id, segment.english, False, "not-run", edit.model, POLICY)
+            )
+            continue
+        if not any(row):
+            checked.append(edit)
+            continue
+        sentences = [
+            (machine, output, "flagged" if key and not known[key] else outcome)
+            for key, (machine, output, outcome) in zip(row, edit.sentences, strict=True)
+        ]
+        checked.append(_finish(segment, sentences, edit.model, edit.cached))
+    return Run(checked, error)
 
 
 def preview(segments: list[Segment], db: BookDB, num_ctx: int = 4096) -> list[str]:

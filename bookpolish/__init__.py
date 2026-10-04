@@ -16,6 +16,7 @@ from bookpolish.engine import (
     parse_labels,
     polish,
     preview,
+    verify_edits,
 )
 from bookpolish.verify import SystemOneVerifier
 
@@ -38,4 +39,5 @@ __all__ = [
     "parse_labels",
     "polish",
     "preview",
+    "verify_edits",
 ]

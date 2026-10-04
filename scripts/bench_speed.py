@@ -26,7 +26,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from bookpolish.engine import BookDB, Server, load_chapter, polish  # noqa: E402
+from bookpolish.engine import (  # noqa: E402
+    BookDB,
+    Server,
+    load_chapter,
+    polish,
+    verify_edits,
+)
 from bookpolish.verify import SystemOneVerifier  # noqa: E402
 
 SERVER = next(
@@ -97,8 +103,9 @@ def main(argv: list[str]) -> int:
             db_path.unlink(missing_ok=True)
             with BookDB(db_path) as db:
                 run = polish(segments, client=Server("http://127.0.0.1:8080", "bench"),
-                             db=db, workers=args.workers, close_client=True,
-                             verifier=verifier)
+                             db=db, workers=args.workers, close_client=True)
+                if verifier is not None and not run.error:
+                    run = verify_edits(segments, run.edits, verifier=verifier, db=db)
             if run.error:
                 errors.append(run.error)
             reasons.update(edit.reason for edit in run.edits)

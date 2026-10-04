@@ -37,7 +37,17 @@ An attached term is listed in the prompt (`沉香 = agarwood`) and locked by the
 
 ## Verification (optional)
 
-The regex gates cannot see a noun that now means something else (agarwood → sandalwood) or an invented detail. `--verify URL --verify-model NAME` sends each sentence that passed the gates and changed to a System One judge at `URL` (`POST /v1/systemone`), and keeps the machine line when the judge flags it. Kev and Laya serve that contract locally; hosted Jev works with `TYPESAFE_API_KEY`. Off by default, because no open judge yet matches Jev zero-shot on this task. See `reports/research-program.md`, and score a judge with `python scripts/eval_judge.py URL NAME` before trusting its threshold.
+The regex gates cannot see a noun that now means something else (agarwood → sandalwood) or an invented detail. A judge can: a System One server (`POST /v1/systemone`) such as Kev, Laya, or Winnow running locally, or hosted Jev with `TYPESAFE_API_KEY`. Each sentence that passed the gates and changed goes to the judge, and a flagged sentence keeps its machine line.
+
+Verification is a second pass, so the editor and the judge never have to share the GPU:
+
+```bash
+python -m bookpolish run chapter.json -o edited.json --workers 8      # editor loaded
+# stop the editor server, start the judge server
+python -m bookpolish verify chapter.json edited.json -o final.json --verify http://127.0.0.1:8009 --verify-model kev-4b
+```
+
+`run --verify URL --verify-model NAME` does both in one process when a small judge fits beside the editor. Verdicts are cached by judge name, so an interrupted pass resumes. If the judge fails, every edit it had not checked falls back to its machine line (`not-run`). Off by default, because no open judge yet matches Jev zero-shot on this task: score one with `python scripts/eval_judge.py URL NAME` before trusting its threshold (`reports/research-program.md`).
 
 ## Output
 

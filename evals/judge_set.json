@@ -1,5 +1,5 @@
 {
- "about": "Judge eval set. kind=real: meaning drift the regex gates accepted in report runs (labelled by hand). kind=swap: accepted Gemma edits with one noun swapped, which the regex gates still accept (drift by construction). kind=sample: 200 random accepted Gemma bookpolish-2 edits; the 11 Jev flagged at 0.7 were read by hand (5 drift, 2 unsure, 4 ok); the other 189 are assumed ok and were not read. jev_1_13 holds Jev's answers for reference.",
+ "about": "Judge eval set. kind=real: meaning drift the regex gates accepted in report runs (labelled by hand). kind=swap: accepted Gemma edits with one noun swapped, which the regex gates still accept (drift by construction). kind=sample: 200 random accepted Gemma bookpolish-2 edits; the 11 Jev flagged at 0.7 were read by hand (5 drift, 2 unsure, 4 ok); the other 189 are assumed ok and were not read. jev_1_13 holds Jev's answers for reference. kind=correction: 16 edits from book 111022 that the Gemma self-judge flagged in the full-book demo, labelled against the Chinese: 15 are corrections toward the source (ok) and 1 is drift (fan -> whisk). Judges that compare only against the machine English fail these. No Jev answers are stored for them.",
  "book": "twkan 103145",
  "items": [
   {
@@ -3795,6 +3795,150 @@
     "changed_who": 0.03,
     "changed_logic": 0.07
    }
+  },
+  {
+   "kind": "correction",
+   "id": "c2-p19",
+   "label": "ok",
+   "chinese_source": "他若是說對方是臥底，在沒有證據的情況下，即便他如今已經進階元嬰期，可依舊容易成個笑話。",
+   "machine_english": "If he claims the other person is an undercover agent, without any evidence, even though he's now in the proto-infant stage, he could easily become a laughing stock.",
+   "edited_english": "If he claims the other person is an undercover agent, without any evidence, even though he has now advanced to the Nascent Soul stage, he could easily become a laughing stock.",
+   "jev_1_13": null
+  },
+  {
+   "kind": "correction",
+   "id": "c2-p60",
+   "label": "ok",
+   "chinese_source": "「衛師侄，你也不要灰心，今後好好修煉，以你的修煉天賦與速度，未來必然可以凝結元嬰的，放心好了。」",
+   "machine_english": "\"Junior Nephew Wei, don't be discouraged. Just keep cultivating diligently. With your talent and speed in cultivation, you will definitely be able to condense a nascent soul in the future. Don't worry.\"",
+   "edited_english": "\"Junior Nephew Wei, don't be discouraged. Just keep cultivating diligently. With your talent and speed in cultivation, you will definitely be able to condense a Nascent Soul in the future. Don't worry.\"",
+   "jev_1_13": null
+  },
+  {
+   "kind": "correction",
+   "id": "c11-p35",
+   "label": "ok",
+   "chinese_source": "所以林修崖很清楚元嬰後期大修士，屬於化神之下最巔峰的一批人。",
+   "machine_english": "Therefore, Lin Xiuya was very clear that late-stage Nascent Soul cultivators belonged to the most elite group below the Nascent Soul stage.",
+   "edited_english": "Therefore, Lin Xiuya was very clear that late-stage Nascent Soul cultivators belonged to the most peak group below the Transformation God stage.",
+   "jev_1_13": null
+  },
+  {
+   "kind": "correction",
+   "id": "c14-p18",
+   "label": "ok",
+   "chinese_source": "因為一個元嬰修士，若是在天星城之中肆意妄為。",
+   "machine_english": "Because if an infant cultivator were to act recklessly in Tianxing City...",
+   "edited_english": "Because if a Nascent Soul cultivator were to act recklessly in Tianxing City...",
+   "jev_1_13": null
+  },
+  {
+   "kind": "correction",
+   "id": "c14-p61",
+   "label": "ok",
+   "chinese_source": "正如旁人忌憚林修崖這位元嬰修士一樣，極陰島的極陰老怪同樣讓人忌憚，不敢輕易招惹。",
+   "machine_english": "Just as others feared Lin Xiuya, the infant cultivator, the Extreme Yin Old Monster of Extreme Yin Island was equally feared and dared not be easily provoked.",
+   "edited_english": "Just as others feared Lin Xiuya, the Nascent Soul cultivator, the Extreme Yin Old Monster of Extreme Yin Island was equally feared and dared not be easily provoked.",
+   "jev_1_13": null
+  },
+  {
+   "kind": "correction",
+   "id": "c14-p62",
+   "label": "ok",
+   "chinese_source": "「太上長老，這可不是開玩笑的事情，極陰島同樣有元嬰修士，名為極陰老怪。」",
+   "machine_english": "\"Elder, this is no joke. There is also a Nascent Soul cultivator on Extreme Yin Island, known as the Extreme Yin Old Monster.\"",
+   "edited_english": "\"Grand Elder, this is no joke. Extreme Yin Island also has a Nascent Soul cultivator, known as the Extreme Yin Old Monster.\"",
+   "jev_1_13": null
+  },
+  {
+   "kind": "correction",
+   "id": "c19-p14",
+   "label": "ok",
+   "chinese_source": "同時，還有一個很重要的情報。",
+   "machine_english": "At the same time, there is also a very important piece of information.",
+   "edited_english": "At the same time, there is also a very important piece of intelligence.",
+   "jev_1_13": null
+  },
+  {
+   "kind": "correction",
+   "id": "c24-p15",
+   "label": "ok",
+   "chinese_source": "「對了，太上長老還有一件事情需要你來決定。」",
+   "machine_english": "\"By the way, there is one more thing that needs your decision, Elder.\"",
+   "edited_english": "\"By the way, the Supreme Elder has one more matter that requires your decision.\"",
+   "jev_1_13": null
+  },
+  {
+   "kind": "correction",
+   "id": "c28-p57",
+   "label": "ok",
+   "chinese_source": "「剛開始的確是有些不滿怨氣的，但現在已經釋然了。畢竟星宮上上下下也是要吃飯的。我也不可能為了這點事就怪罪整個星宮。」",
+   "machine_english": "\"At first I was indeed a little dissatisfied and resentful, but now I've let it go. After all, everyone in the constellation needs to eat. I can't blame the entire constellation for this little thing.\"",
+   "edited_english": "\"At first I was indeed a little dissatisfied and resentful, but now I've let it go. After all, everyone in the Star Palace needs to eat. I can't blame the entire Star Palace for this little thing.\"",
+   "jev_1_13": null
+  },
+  {
+   "kind": "correction",
+   "id": "c30-p51",
+   "label": "ok",
+   "chinese_source": "同時，林修崖腦海中，廢物修仙系統的聲音再一次響起。",
+   "machine_english": "At the same time, the voice of the useless cultivation system rang out in Lin Xiuya's mind once again.",
+   "edited_english": "At the same time, the voice of the Useless Immortal Cultivation System rang out in Lin Xiuya's mind once again.",
+   "jev_1_13": null
+  },
+  {
+   "kind": "correction",
+   "id": "c34-p3",
+   "label": "ok",
+   "chinese_source": "他也沒有想到極陰老怪的試探，基本上沒起什麼作用。",
+   "machine_english": "He hadn't expected that the Extreme Yin Old Monster's test would have had virtually no effect.",
+   "edited_english": "He hadn't expected that the Extreme Yin Old Monster's probe would have had virtually no effect.",
+   "jev_1_13": null
+  },
+  {
+   "kind": "correction",
+   "id": "c34-p22",
+   "label": "drift",
+   "chinese_source": "手掌好似蒲扇一般，直接拍在了極陰老怪的腦袋上。",
+   "machine_english": "His palm, like a fan, slapped directly onto the head of the Extreme Yin Old Monster.",
+   "edited_english": "His palm, like a whisk, slapped directly onto the head of the Extreme Yin Old Monster.",
+   "jev_1_13": null
+  },
+  {
+   "kind": "correction",
+   "id": "c39-p4",
+   "label": "ok",
+   "chinese_source": "「多謝太上長老。」",
+   "machine_english": "\"Thank you, Elder.\"",
+   "edited_english": "\"Thank you, Supreme Elder.\"",
+   "jev_1_13": null
+  },
+  {
+   "kind": "correction",
+   "id": "c42-p49",
+   "label": "ok",
+   "chinese_source": "這培育金雷竹便是其中之一。",
+   "machine_english": "This is one of the methods for cultivating golden bamboo.",
+   "edited_english": "Cultivating golden thunder bamboo is one of these methods.",
+   "jev_1_13": null
+  },
+  {
+   "kind": "correction",
+   "id": "c43-p50",
+   "label": "ok",
+   "chinese_source": "「這個自然沒有任何問題，好了，那這些天地靈藥還有天雷竹就交給你來培育了。記得千萬不要讓我失望，否則的話後果可是很嚴重的。」",
+   "machine_english": "\"That's no problem at all. Alright, then these rare herbs and Thunder Bamboo are yours to cultivate. Remember, don't let me down, or the consequences will be very serious.\"",
+   "edited_english": "\"That's no problem at all. Alright, then these heavenly spirit herbs and Thunder Bamboo are yours to cultivate. Remember, don't let me down, or the consequences will be very serious.\"",
+   "jev_1_13": null
+  },
+  {
+   "kind": "correction",
+   "id": "c54-p51",
+   "label": "ok",
+   "chinese_source": "能阻攔元嬰級別的神念探查。",
+   "machine_english": "It can block the divine sense probing of infants.",
+   "edited_english": "It can block the divine sense probing of Nascent Soul level.",
+   "jev_1_13": null
   }
  ]
 }

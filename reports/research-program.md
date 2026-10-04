@@ -30,9 +30,9 @@ Every run reports what it changed and why the rest was kept.
 | Regex gate false rejects on two recorded runs | 34 of 3,934 accepted edits (0.9%) |
 | Drift the regex gates still let through | about 3% of accepted edits (5 of the 11 Jev flagged out of 200 sampled; read by hand) |
 | Jev as a second judge, threshold 0.7 | 9/11 real misses, 50/60 noun swaps, 4/193 good edits flagged; AUC 0.983 |
-| Best open judge zero-shot | Kev-4B AUC 0.909, but 3 s per item and it fills the GPU; Kev-0.8B 0.74; Laya near chance |
-| Speed: 8 server slots instead of 4 | 150.8 → 244.6 paragraphs/min on the benchmark (+62%) |
-| Speed: speculative decoding, 4 slots | n-gram +10%, Gemma MTP +10% (MTP acceptance about 95% at 3 drafted tokens) |
+| Free local judges | The editor itself (Gemma 4 E4B, logprobs, 2 questions) AUC 0.966; Winnow-12B Q4 (logprobs, 4 questions) AUC 0.939 and 10/11 real misses; together they match Jev's recall with ~2× its false flags (4–6% of good edits, each of which just keeps the machine line) |
+| Other open judges zero-shot | Kev-4B AUC 0.909 but 3 s per item and fills the GPU; Kev-0.8B 0.74; Laya near chance |
+| Speed on the 1,837-paragraph benchmark | 150.8 → **306.6 paragraphs/min (2.03×)** with 8 slots + Gemma MTP drafting 6 tokens; outcome counts unchanged within noise |
 
 ## Metrics
 
@@ -70,11 +70,17 @@ Every experiment reports both groups. A speed result that moves accuracy, or an 
 
 ### A. Throughput: the cheapest wins first
 
-1. **Slots and workers (kept).** `-np 8` with `--workers 8` gave +62% with no change in outcomes. Next, try 12 and 16 slots, and give the KV cache `-c 16384` when slots × prompt length needs it. Stop when paragraphs/min stops rising.
-2. **Speculative decoding.**
-   - Gemma's MTP head drafts with about 95% acceptance, but only 3 tokens at a time (`--spec-draft-n-max 3`). Raise it to 6–8 and combine with 8 slots.
-   - n-gram lookup (`--spec-type ngram-simple`) suits copy-heavy output, but at 16 drafted tokens only 51% were accepted. Try m = 4–8.
-   - Sampling stays distribution-preserving, so outcome counts should match the baseline within noise. Check that they do.
+Recommended server today, 2.03× the original setup (S7):
+
+```text
+llama-server -m gemma-4-E4B-it-qat-UD-Q4_K_XL.gguf -c 8192 --reasoning off -fit on -fa on --jinja -np 8 --spec-type draft-mtp -md mtp-gemma-4-E4B-it.gguf --spec-draft-n-max 6
+bookpolish run ... --workers 8
+```
+
+1. **Slots (done).** 8 slots is the peak on a 12 GB 4070. 12 and 16 slots are slower even with a doubled cache, so the card is compute-bound.
+2. **Speculative decoding (done, tune further).**
+   - Speculation pays off only together with 8 slots: +25% on top of them, but about +8% at 4 slots.
+   - Next: `--spec-draft-n-max` 4/8, `--spec-type ngram-simple,draft-mtp` together, and `ngram-mod`.
 3. **Fewer generated tokens.** Have the model return only changed labels (`[2] …`) and treat a missing label as unchanged. About 30% of sentences come back unchanged, so the output shrinks by about that much.
    - Risk: small models drift toward "no change". This needs a `POLICY` bump and an edit-yield comparison.
 4. **Skip paragraphs that are already fine.**
@@ -84,9 +90,26 @@ Every experiment reports both groups. A speed result that moves accuracy, or an 
 
 ### B. Verification without a paid service
 
-Jev proved a second judge catches what regex cannot: agarwood→sandalwood, invented details, changed actors. It is a paid trial, so the shipped default is no external judge. Ways to get Jev-level judging locally:
+Jev proved a second judge catches what regex cannot: agarwood→sandalwood, invented details, changed actors. It is a paid trial, so it is used only as a reference. Local results so far (`evals/judge_*.json`, `scripts/eval_judge.py`):
 
-1. **Reuse the editor as judge.** Read P(yes) from Gemma's logprobs on the same four questions (SemIf approach). This costs no extra VRAM. The experiment is `llm_judge.py` in this session's notes; see results below once run.
+| Judge | thing | claim | who | logic | Fit beside the editor |
+|---|---:|---:|---:|---:|---|
+| Jev 1.13 (hosted, reference) | 0.951 | 0.960 | 0.769 | 0.508 | n/a |
+| Gemma 4 E4B, logprobs (the editor) | 0.965 | 0.923 | 0.781 | 0.368 | yes, it is the editor |
+| Winnow-12B Q4_K_M, logprobs | 0.958 | 0.936 | 0.903 | 0.826 | no: second pass |
+| Kev-4B (systemone) | 0.874 | 0.811 | 0.762 | 0.435 | no, and 3 s/item |
+| Kev-0.8B / Laya (systemone) | ≤ 0.74 | | | | yes, but too weak zero-shot |
+
+Values are AUC per question; 0.5 is chance.
+
+**Shipped stack:** edit with Gemma, then run `verify` with Gemma on "changed thing" and "added claim" (threshold 0.5) through the same server. Optionally run a second `verify` with Winnow on all four questions after unloading Gemma. Gemma ≥ 0.5 or Winnow ≥ 0.7 caught 10/11 real misses, 51/60 noun swaps, and 5/5 sampled drift, and flagged 12/193 good edits. Jev at 0.7 caught 9/11, 50/60, and 5/5, and flagged 4/193.
+
+Open work:
+
+1. **Fewer false flags.** The local stack flags 2–3× more good edits than Jev.
+   - Tune per-question thresholds on a larger judge set.
+   - Run Winnow through its own `/v1/systemone` server (patched llama.cpp: Linux/WSL, or a CUDA build on Windows), which reads answers the way it was trained.
+   - Try Winnow Q5/Q6 if they fit.
 2. **Distil Jev into a small open judge.** While the trial lasts:
    - Label 3,000–5,000 accepted edits with Jev. That is about $0.10 at the published price.
    - Fine-tune Kev-0.8B (LoRA; `kev.train`) or Laya (ModernBERT, ~421M) on those labels.
@@ -154,9 +177,17 @@ This is the autoresearch loop: one variable, one fixed benchmark, keep or discar
 | G3 | Person gate: compare counts, not presence | Person recall 46.8% → 95.7%; +2 false rejects, both real viewpoint changes | keep |
 | S0 | Baseline: 4 slots, 4 workers | 150.8 paragraphs/min, 1,837 paragraphs | baseline |
 | S1 | 8 slots, 8 workers | 244.6 /min (+62%); outcomes within noise | keep |
-| S2 | n-gram speculative, n=3 m=16, 4 slots | 165.9 /min (+10%); 51% draft acceptance; run overlapped a stray process, rerun as S2b | pending |
-| S3 | Gemma MTP draft, 4 slots | 165.8 /min (+10%); ~95% acceptance at 3 tokens | keep, tune |
+| S2 | n-gram speculative, n=3 m=16, 4 slots | 165.9 /min (+10%); overlapped a stray GPU process, rerun as S2b | superseded |
+| S3 | Gemma MTP draft, 4 slots, 3 drafted | 165.8 /min (+10%); ~95% acceptance at 3 tokens | tuned in S7 |
 | J1 | Jev 1.13 judge | AUC 0.983; 9/11 real, 4/193 false flags at 0.7 | reference only (paid) |
 | J2 | Laya zero-shot | Near chance; two questions inverted | discard as-is; fine-tune candidate |
 | J3 | Kev-0.8B zero-shot | Best question AUC 0.74; never fires at 0.7 | discard as-is; fine-tune candidate |
 | J4 | Kev-4B zero-shot | AUC 0.909 (thing/claim); 3.1 s per item; fills 12 GB | too heavy beside the editor |
+| J5 | Gemma 4 E4B (the editor) as logprob judge | thing/claim AUC 0.966; 0.5: 6/11 real, 51/60 swaps, 5/193 false flags; 206 ms/item for 4 questions | keep, default judge |
+| J6 | Winnow-12B Q4 as logprob judge (second pass) | all four questions useful (who 0.903, logic 0.826); 0.7: 10/11 real, 44/60 swaps, 7/193 false flags; 549 ms/item | keep, optional second pass |
+| S2b | n-gram speculative, n=3 m=16, 4 slots (clean rerun) | 163.2 /min (+8%), 51.5% acceptance | superseded |
+| S4 | 8 slots + n-gram m=8 | 289.7 /min (1.92×), 67.7% acceptance | superseded by S7 |
+| S5 | 12 slots | 228.1 /min, below 8 slots | discard |
+| S6 | 16 slots, -c 16384 | 237.7 /min, below 8 slots: compute-bound, not cache-bound | discard |
+| S7 | 8 slots + Gemma MTP, 6 drafted | **306.6 /min (2.03×)**, 69% acceptance, outcomes within noise | keep: recommended server config |
+| S8 | 4 slots + Gemma MTP, 6 drafted | 161.0 /min | speculation pays off only with 8 slots |

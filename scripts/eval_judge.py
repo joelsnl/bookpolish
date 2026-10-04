@@ -8,6 +8,8 @@ Asks every item all four judge questions through the product verifier class
 (SystemOneVerifier, or ChatLogprobVerifier for a chat model's logprobs) and
 reports, per threshold, how many drift items were flagged (recall) and how many
 ok items were flagged (false flags), plus ranking quality (AUC) per question.
+fix-flagged counts good corrections toward the Chinese that the judge would
+revert, the failure a machine-anchored judge shows on a book with bad terms.
 Jev 1.13's stored answers are scored alongside for comparison. Items labelled
 "unsure" are left out of both rates.
 """
@@ -52,11 +54,11 @@ def report_auc(items: list[dict], answers: list[dict[str, float]]) -> None:
 
 def table(name: str, items: list[dict], scores: list[float]) -> None:
     print(f"\n{name}")
-    print("  thr   real-drift  swap-drift  sample-drift  ok-flagged")
+    print("  thr   real-drift  swap-drift  sample-drift  ok-flagged  fix-flagged")
     for thr in THRESHOLDS:
         cells = []
         for kind, label in (("real", "drift"), ("swap", "drift"), ("sample", "drift"),
-                            ("sample", "ok")):
+                            ("sample", "ok"), ("correction", "ok")):
             group = [s for it, s in zip(items, scores, strict=True)
                      if it["kind"] == kind and it["label"] == label]
             cells.append(f"{sum(s >= thr for s in group)}/{len(group)}")
@@ -99,7 +101,8 @@ def main(argv: list[str]) -> int:
           f"({seconds / len(items) * 1000:.0f} ms each, 8 in flight)")
     report_auc(items, answers)
     table(args.model, items, [max(a.values()) for a in answers])
-    table("jev-1.13 (stored)", items, [max(it["jev_1_13"].values()) for it in items])
+    with_jev = [it for it in items if it["jev_1_13"]]
+    table("jev-1.13 (stored)", with_jev, [max(it["jev_1_13"].values()) for it in with_jev])
     out = Path(args.set).with_name(f"judge_{args.model.replace('/', '_')}.json")
     out.write_text(json.dumps(answers), encoding="utf-8")
     return 0

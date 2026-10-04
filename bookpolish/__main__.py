@@ -6,11 +6,13 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from collections import Counter
 from pathlib import Path
 
 from bookpolish.engine import (
     POLICY,
     BookDB,
+    ModelError,
     Run,
     Server,
     apply_glossary,
@@ -31,6 +33,7 @@ def _dump(run: Run) -> dict:
         "policy": POLICY,
         "model": model,
         "error": run.error,
+        "summary": dict(Counter(edit.reason for edit in run.edits)),
         "edits": [
             {
                 "id": edit.segment_id,
@@ -40,6 +43,11 @@ def _dump(run: Run) -> dict:
                 "model": edit.model,
                 "policy": edit.policy,
                 "cached": edit.cached,
+                "sentences": {
+                    "edited": edit.sentences_edited,
+                    "rejected": edit.sentences_rejected,
+                    "skipped": edit.sentences_skipped,
+                },
             }
             for edit in run.edits
         ],
@@ -59,9 +67,18 @@ def main(argv: list[str] | None = None) -> int:
     run.add_argument("--timeout", type=float, default=180)
     run.add_argument("--print-prompt", action="store_true")
     run.add_argument("--glossary", help="JSON list of book-wide terms")
+    run.add_argument(
+        "--workers",
+        type=int,
+        default=1,
+        help="requests in flight at once; match the server's parallel slots",
+    )
     args = parser.parse_args(argv)
     if args.ctx < 1:
         print("ctx must be positive", file=sys.stderr)
+        return 2
+    if args.workers < 1:
+        print("workers must be positive", file=sys.stderr)
         return 2
     segments = load_chapter(Path(args.chapter))
     if args.glossary:
@@ -72,8 +89,19 @@ def main(argv: list[str] | None = None) -> int:
                 print(block)
                 print("\n---\n")
             return 0
-        client = Server(args.host, args.model, timeout=args.timeout)
-        result = polish(segments, client=client, db=db, num_ctx=args.ctx, close_client=True)
+        try:
+            client = Server(args.host, args.model, timeout=args.timeout)
+        except (ModelError, ValueError) as exc:
+            print(exc, file=sys.stderr)
+            return 1
+        result = polish(
+            segments,
+            client=client,
+            db=db,
+            num_ctx=args.ctx,
+            close_client=True,
+            workers=args.workers,
+        )
     payload = json.dumps(_dump(result), ensure_ascii=False, indent=2)
     if args.output:
         Path(args.output).write_text(payload + "\n", encoding="utf-8")

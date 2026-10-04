@@ -30,7 +30,7 @@ def changed_pairs(chapter: Path, outputs: list[Path]):
             before, after = _sentences(segment.english), _sentences(edit["english"])
             if len(before) != len(after):
                 before, after = [segment.english], [edit["english"]]
-            for source, result in zip(before, after):
+            for source, result in zip(before, after, strict=False):
                 if source != result:
                     yield segment, source, result
 

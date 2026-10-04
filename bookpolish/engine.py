@@ -10,10 +10,14 @@ import hashlib
 import json
 import re
 import sqlite3
+import time
 import urllib.error
 import urllib.request
+from collections import deque
+from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass, replace
 from pathlib import Path
+from typing import Protocol
 from urllib.parse import urlparse
 
 # ponytail: char/4 plus slack stands in for the model tokenizer and chat template.
@@ -22,6 +26,8 @@ SLACK = 128
 TEMPERATURE = 0.2
 EARLIER_LIMIT = 2
 POLICY = "bookpolish-2"
+RETRY_DELAY = 2.0
+_RETRY_STATUS = frozenset({429, 500, 502, 503, 504})
 
 SYSTEM = """Copy-edit only the numbered REPLACE spans of this novel's machine English.
 Preserve meaning, names, quantities, negation, speaker, viewpoint, and voice.
@@ -140,6 +146,11 @@ class Edit:
     model: str
     policy: str
     cached: bool = False
+    # Per-sentence outcome. A "fallback" paragraph with sentences_edited > 0
+    # still carries those accepted sentences in `english`.
+    sentences_edited: int = 0
+    sentences_rejected: int = 0
+    sentences_skipped: int = 0
 
 
 @dataclass(frozen=True)
@@ -154,8 +165,19 @@ class Pack:
     send: bool
 
 
+class Client(Protocol):
+    model: str
+
+    def generate(self, system: str, user: str, max_tokens: int) -> str: ...
+
+    def close(self) -> None: ...
+
+
 def tokens(text: str) -> int:
-    return max(1, (len(text) + 3) // 4)
+    # CJK runs about one token per character; chars/4 undercounted the Chinese
+    # source roughly fourfold.
+    cjk = len(_CJK.findall(text))
+    return max(1, cjk + (len(text) - cjk + 3) // 4)
 
 
 def output_tokens(pieces: list[str] | tuple[str, ...]) -> int:
@@ -303,7 +325,15 @@ def parse_labels(text: str, count: int) -> list[str] | None:
     """Map [n] blocks by label. One unlabeled block is allowed only when count is 1."""
     if count < 1:
         return None
-    cleaned = re.sub(r"\*+\[(\d+)\]\*+", r"[\1]", (text or "").strip())
+    text = text or ""
+    # Reasoning models put a trace before the answer. Some templates drop the
+    # opening tag, so cut through the last closing tag. An unclosed trace was
+    # cut off by max_tokens and holds no answer.
+    if "</think>" in text:
+        text = text.rsplit("</think>", 1)[1]
+    elif "<think>" in text:
+        return None
+    cleaned = re.sub(r"\*+\[(\d+)\]\*+", r"[\1]", text.strip())
     cleaned = re.sub(r"</?(?:replace|context)>", "", cleaned, flags=re.IGNORECASE)
     found: dict[int, str] = {}
     for num, body in _LABEL.findall(cleaned):
@@ -382,18 +412,15 @@ def bind_context(
     segment: Segment, earlier: list[str], num_ctx: int
 ) -> tuple[str, list[Pack]]:
     """Prefer the full packet. Drop earlier sources only when nothing would fit."""
-    full = context_text(segment, earlier)
-    options = [full]
-    bare = context_text(segment, [])
-    if bare != full:
-        options.append(bare)
-    chosen = (options[-1], plan_packs(segment.english, options[-1], num_ctx))
-    for context in options:
+    context = context_text(segment, earlier)
+    packs = plan_packs(segment.english, context, num_ctx)
+    if earlier and not any(pack.send for pack in packs):
+        context = context_text(segment, [])
         packs = plan_packs(segment.english, context, num_ctx)
-        chosen = (context, packs)
-        if any(pack.send for pack in packs):
-            break
-    return chosen
+    return context, packs
+
+
+_COUNT_COLUMNS = ("sentences_edited", "sentences_rejected", "sentences_skipped")
 
 
 class BookDB:
@@ -427,6 +454,14 @@ class BookDB:
             );
             """
         )
+        # Databases from 0.1.0 predate the sentence counts.
+        columns = {row[1] for row in self.conn.execute("pragma table_info(cache)")}
+        for column in _COUNT_COLUMNS:
+            if column not in columns:
+                self.conn.execute(
+                    f"alter table cache add column {column} integer not null default 0"
+                )
+        self.conn.commit()
 
     def close(self) -> None:
         self.conn.close()
@@ -497,20 +532,31 @@ class BookDB:
 
     def get_cached(self, key: str, segment_id: str) -> Edit | None:
         row = self.conn.execute(
-            "select english, accepted, reason, model from cache where key = ?",
+            f"select english, accepted, reason, model, {', '.join(_COUNT_COLUMNS)} "
+            "from cache where key = ?",
             (key,),
         ).fetchone()
         if row is None:
             return None
-        return Edit(segment_id, row[0], bool(row[1]), row[2], row[3], POLICY, True)
+        return Edit(
+            segment_id, row[0], bool(row[1]), row[2], row[3], POLICY, True, *row[4:]
+        )
 
     def put_cached(self, key: str, edit: Edit) -> None:
         self.conn.execute(
-            """
-            insert or replace into cache (key, english, accepted, reason, model)
-            values (?, ?, ?, ?, ?)
+            f"""
+            insert or replace into cache (
+                key, english, accepted, reason, model, {', '.join(_COUNT_COLUMNS)}
+            ) values (?, ?, ?, ?, ?, ?, ?, ?)
             """,
-            (key, edit.english, int(edit.accepted), edit.reason, edit.model),
+            (
+                key,
+                edit.english,
+                int(edit.accepted),
+                edit.reason,
+                edit.model,
+                *(getattr(edit, column) for column in _COUNT_COLUMNS),
+            ),
         )
         self.conn.commit()
 
@@ -541,6 +587,12 @@ def _cache_key(model: str, num_ctx: int, segment: Segment, earlier: list[str]) -
 
 
 def _finish(segment: Segment, pieces: list[str], reasons: list[str], model: str) -> Edit:
+    """Fold per-sentence reasons into one paragraph edit."""
+    counts = {
+        "sentences_edited": reasons.count("edited"),
+        "sentences_rejected": reasons.count("fallback"),
+        "sentences_skipped": reasons.count("skipped"),
+    }
     if reasons and all(reason == "unchanged" for reason in reasons):
         english = segment.english
         reason = "unchanged"
@@ -559,7 +611,7 @@ def _finish(segment: Segment, pieces: list[str], reasons: list[str], model: str)
         else:
             reason = "edited"
         accepted = reason == "edited"
-    return Edit(segment.segment_id, english, accepted, reason, model, POLICY)
+    return Edit(segment.segment_id, english, accepted, reason, model, POLICY, **counts)
 
 
 def _memory(db: BookDB, segment: Segment, ordinal: int) -> list[str]:
@@ -569,71 +621,122 @@ def _memory(db: BookDB, segment: Segment, ordinal: int) -> list[str]:
     return kept[-EARLIER_LIMIT:]
 
 
-def _edit_segment(segment: Segment, client: object, db: BookDB, num_ctx: int) -> Edit:
-    ordinal = db.ingest(segment)
-    earlier = _memory(db, segment, ordinal)
-    key = _cache_key(client.model, num_ctx, segment, earlier)  # type: ignore[attr-defined]
-    cached = db.get_cached(key, segment.segment_id)
-    if cached is not None:
-        return cached
-    model = client.model  # type: ignore[attr-defined]
-    if not segment.english.strip():
-        edit = Edit(segment.segment_id, segment.english, True, "unchanged", model, POLICY)
-        db.put_cached(key, edit)
-        return edit
-    context, packs = bind_context(segment, earlier, num_ctx)
+@dataclass(frozen=True)
+class _Job:
+    index: int
+    key: str
+    context: str
+    packs: list[Pack]
+
+
+def _generate(segment: Segment, job: _Job, client: Client) -> Edit:
+    """Send each pack and gate each sentence. Touches no database state."""
     pieces: list[str] = []
     reasons: list[str] = []
-    for pack in packs:
+    for pack in job.packs:
         if not pack.send:
             pieces.extend(pack.pieces)
-            reasons.append("skipped")
+            reasons.extend(["skipped"] * len(pack.pieces))
             continue
-        raw = client.generate(SYSTEM, user_prompt(context, pack.pieces), output_tokens(pack.pieces))  # type: ignore[attr-defined]
+        prompt = user_prompt(job.context, pack.pieces)
+        raw = client.generate(SYSTEM, prompt, output_tokens(pack.pieces))
         parsed = parse_labels(raw, len(pack.pieces))
         if parsed is None:
             pieces.extend(pack.pieces)
-            reasons.append("fallback")
+            reasons.extend(["fallback"] * len(pack.pieces))
             continue
-        for source, output in zip(pack.pieces, parsed):
+        for source, output in zip(pack.pieces, parsed, strict=True):
             if accept_edit(source, output, segment.terms):
                 pieces.append(output)
                 reasons.append("edited" if output.strip() != source.strip() else "unchanged")
             else:
                 pieces.append(source)
                 reasons.append("fallback")
-    edit = _finish(segment, pieces, reasons, model)
-    db.put_cached(key, edit)
-    return edit
+    return _finish(segment, pieces, reasons, client.model)
+
+
+def _plan_jobs(
+    segments: list[Segment], model: str, db: BookDB, num_ctx: int, edits: list[Edit | None]
+) -> list[_Job]:
+    """Ingest every segment in narrative order and fill cached edits.
+
+    Ingesting before any request keeps earlier-source memory the same no matter
+    how many requests run at once.
+    """
+    jobs: list[_Job] = []
+    for index, segment in enumerate(segments):
+        ordinal = db.ingest(segment)
+        earlier = _memory(db, segment, ordinal)
+        key = _cache_key(model, num_ctx, segment, earlier)
+        cached = db.get_cached(key, segment.segment_id)
+        if cached is not None:
+            edits[index] = cached
+        elif not segment.english.strip():
+            empty = Edit(segment.segment_id, segment.english, True, "unchanged", model, POLICY)
+            edits[index] = empty
+            db.put_cached(key, empty)
+        else:
+            context, packs = bind_context(segment, earlier, num_ctx)
+            jobs.append(_Job(index, key, context, packs))
+    return jobs
 
 
 def polish(
     segments: list[Segment],
     *,
-    client: object,
+    client: Client,
     db: BookDB,
     num_ctx: int = 4096,
     close_client: bool = False,
+    workers: int = 1,
 ) -> Run:
-    """Edit segments in list order. List order is narrative order."""
+    """Edit segments. List order is narrative order.
+
+    Up to `workers` segments are in flight at once; results and the cache are
+    written in list order on the calling thread. After a ModelError no new
+    segment starts. Segments already in flight finish and keep their edits,
+    and segments never started are marked "not-run".
+    """
+    if workers < 1:
+        raise ValueError("workers must be at least 1")
     try:
-        edits: list[Edit] = []
-        for index, segment in enumerate(segments):
-            try:
-                edits.append(_edit_segment(segment, client, db, num_ctx))
-            except ModelError as exc:
-                edits.append(
-                    Edit(segment.segment_id, segment.english, False, "error", client.model, POLICY)  # type: ignore[attr-defined]
-                )
-                for later in segments[index + 1 :]:
-                    edits.append(
-                        Edit(later.segment_id, later.english, False, "not-run", client.model, POLICY)  # type: ignore[attr-defined]
+        model = client.model
+        edits: list[Edit | None] = [None] * len(segments)
+        jobs = iter(_plan_jobs(segments, model, db, num_ctx, edits))
+        error: str | None = None
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            window: deque[tuple[_Job, Future[Edit]]] = deque()
+
+            def fill() -> None:
+                while error is None and len(window) < workers:
+                    job = next(jobs, None)
+                    if job is None:
+                        return
+                    window.append((job, pool.submit(_generate, segments[job.index], job, client)))
+
+            fill()
+            while window:
+                job, future = window.popleft()
+                segment = segments[job.index]
+                try:
+                    edit = future.result()
+                except ModelError as exc:
+                    error = error or str(exc)
+                    edits[job.index] = Edit(
+                        segment.segment_id, segment.english, False, "error", model, POLICY
                     )
-                return Run(edits, str(exc))
-        return Run(edits, None)
+                    continue
+                edits[job.index] = edit
+                db.put_cached(job.key, edit)
+                fill()
+        final = [
+            edit or Edit(seg.segment_id, seg.english, False, "not-run", model, POLICY)
+            for seg, edit in zip(segments, edits, strict=True)
+        ]
+        return Run(final, error)
     finally:
         if close_client:
-            client.close()  # type: ignore[attr-defined]
+            client.close()
 
 
 def preview(segments: list[Segment], db: BookDB, num_ctx: int = 4096) -> list[str]:
@@ -738,12 +841,14 @@ def load_chapter(path: Path) -> list[Segment]:
 class Server:
     """OpenAI-compatible chat client. The caller owns the URL."""
 
-    def __init__(self, host: str, model: str = "", timeout: float = 180):
+    def __init__(self, host: str, model: str = "", timeout: float = 180, retries: int = 2):
         parsed = urlparse(host)
         if parsed.scheme not in {"http", "https"} or not parsed.netloc:
             raise ValueError("host must be an http or https URL")
         self.host = host.rstrip("/")
         self.timeout = timeout
+        self.retries = max(0, retries)
+        self._sleep = time.sleep
         self.model = model or self._first_model()
         self._closed = False
 
@@ -768,14 +873,7 @@ class Server:
             headers={"Content-Type": "application/json", "User-Agent": "bookpolish"},
             method="POST",
         )
-        try:
-            with urllib.request.urlopen(request, timeout=self.timeout) as response:
-                body = json.loads(response.read().decode())
-        except urllib.error.HTTPError as exc:
-            detail = exc.read().decode("utf-8", errors="replace")[:500]
-            raise ModelError(f"HTTP {exc.code}: {detail}") from exc
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
-            raise ModelError(str(exc)) from exc
+        body = self._post(request)
         try:
             choice = body["choices"][0]
             message = choice.get("message") or {}
@@ -783,6 +881,26 @@ class Server:
         except (KeyError, IndexError, TypeError) as exc:
             raise ModelError("model response had no text") from exc
         return str(text).strip()
+
+    def _post(self, request: urllib.request.Request) -> dict:
+        """POST with retries for a busy or briefly unreachable server."""
+        for attempt in range(self.retries + 1):
+            try:
+                with urllib.request.urlopen(request, timeout=self.timeout) as response:
+                    return json.loads(response.read().decode())
+            except urllib.error.HTTPError as exc:
+                detail = exc.read().decode("utf-8", errors="replace")[:500]
+                failure = ModelError(f"HTTP {exc.code}: {detail}")
+                if exc.code not in _RETRY_STATUS:
+                    raise failure from exc
+                cause: Exception = exc
+            except (urllib.error.URLError, TimeoutError, ConnectionError) as exc:
+                failure, cause = ModelError(str(exc)), exc
+            except json.JSONDecodeError as exc:
+                raise ModelError(f"model response was not JSON: {exc}") from exc
+            if attempt < self.retries:
+                self._sleep(RETRY_DELAY * 2**attempt)
+        raise failure from cause
 
     def _first_model(self) -> str:
         request = urllib.request.Request(
@@ -793,5 +911,11 @@ class Server:
             with urllib.request.urlopen(request, timeout=self.timeout) as response:
                 body = json.loads(response.read().decode())
             return str(body["data"][0]["id"])
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError, IndexError) as exc:
+        except (
+            urllib.error.URLError,
+            TimeoutError,
+            json.JSONDecodeError,
+            KeyError,
+            IndexError,
+        ) as exc:
             raise ModelError(f"could not read a model id from {self.host}: {exc}") from exc

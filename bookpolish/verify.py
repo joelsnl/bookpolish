@@ -22,6 +22,7 @@ its threshold is trusted (scripts/eval_judge.py).
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import os
@@ -33,7 +34,8 @@ from urllib.parse import urlparse
 
 from bookpolish.engine import ModelError
 
-QUESTIONS_VERSION = "q1"
+# The four questions SystemOneVerifier has always asked, measured against Jev.
+SYSTEMONE_QUESTIONS = ("changed_thing", "added_claim", "changed_who", "changed_logic")
 QUESTIONS = {
     "changed_thing": {
         "type": "noul",
@@ -64,8 +66,35 @@ QUESTIONS = {
         "instructions": "Does `edited_english` turn a condition, hypothetical, question, or "
         "possibility in `machine_english` into a plain statement, or the reverse?",
     },
+    # Anchored to the Chinese. A wrong machine line makes a correct fix look like a
+    # "changed thing" to the questions above (book 111022: 15 of 16 self-judge
+    # flags were fixes toward the source).
+    "less_faithful": {
+        "type": "noul",
+        "instructions": "Compared with `machine_english`, is `edited_english` a less faithful "
+        "translation of `chinese_source`?",
+        "criteria": {
+            "true": "The edit moved away from what the Chinese says",
+            "false": "The edit is as faithful or more faithful to the Chinese",
+        },
+    },
+    "adds_to_source": {
+        "type": "noul",
+        "instructions": "Does `edited_english` state an object, title, action, detail, or "
+        "condition that `chinese_source` does not say?",
+        "criteria": {
+            "true": "The edit says something the Chinese does not",
+            "false": "Everything in the edit is supported by the Chinese",
+        },
+    },
 }
 _RETRY_STATUS = frozenset({429, 500, 502, 503, 504})
+
+
+def _questions_key(questions: tuple[str, ...]) -> str:
+    """Names and wording of the asked questions: reworded questions re-ask."""
+    text = json.dumps([[key, QUESTIONS[key]] for key in questions], sort_keys=True)
+    return f"{','.join(questions)}#{hashlib.sha256(text.encode()).hexdigest()[:10]}"
 
 
 HOSTED_JEV = "https://api.typesafe.ai"
@@ -131,8 +160,12 @@ class SystemOneVerifier(_JudgeBase):
         timeout: float = 60,
         retries: int = 3,
         parallel: int = 8,
+        questions: tuple[str, ...] = SYSTEMONE_QUESTIONS,
     ):
         super().__init__(url, model, timeout, retries, parallel)
+        if not questions or set(questions) - set(QUESTIONS):
+            raise ValueError(f"unknown judge questions: {sorted(set(questions) - set(QUESTIONS))}")
+        self.questions = tuple(questions)
         self.api_key = api_key or ""
         if self.url == HOSTED_JEV:
             self.api_key = self.api_key or os.environ.get("TYPESAFE_API_KEY", "")
@@ -143,7 +176,7 @@ class SystemOneVerifier(_JudgeBase):
     @property
     def name(self) -> str:
         """Keys cached verdicts: a different judge or threshold asks again."""
-        return f"systemone:{self.model}:{QUESTIONS_VERSION}:{self.threshold}"
+        return f"systemone:{self.model}:{_questions_key(self.questions)}:{self.threshold}"
 
     def check(self, source: str, pairs: list[tuple[str, str]]) -> list[bool]:
         """True for each (machine, edited) pair that keeps its meaning."""
@@ -158,7 +191,12 @@ class SystemOneVerifier(_JudgeBase):
 
     def _ask(self, state: dict) -> dict[str, float]:
         body = self._post(
-            "/v1/systemone", {"state": state, "model": self.model, "questions": QUESTIONS}
+            "/v1/systemone",
+            {
+                "state": state,
+                "model": self.model,
+                "questions": {key: QUESTIONS[key] for key in self.questions},
+            },
         )
         try:
             return {key: float(answer["noul"]) for key, answer in body["answers"].items()}
@@ -209,7 +247,7 @@ class ChatLogprobVerifier(_JudgeBase):
     @property
     def name(self) -> str:
         return (
-            f"logprob:{self.model}:{QUESTIONS_VERSION}:{','.join(self.questions)}:"
+            f"logprob:{self.model}:{_questions_key(self.questions)}:"
             f"{self.threshold}"
         )
 

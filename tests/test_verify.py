@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from bookpolish.engine import BookDB, ModelError, Segment, polish, verify_edits  # noqa: E402
 from bookpolish.verify import (  # noqa: E402
     HOSTED_JEV,
+    QUESTIONS,
     ChatLogprobVerifier,
     SystemOneVerifier,
 )
@@ -241,6 +242,12 @@ class ChatLogprobVerifierTests(unittest.TestCase):
     def test_rejects_unknown_questions(self):
         with self.assertRaises(ValueError):
             ChatLogprobVerifier("http://127.0.0.1:8080", "m", questions=("vibes",))
+
+    def test_rewording_a_question_changes_the_name(self):
+        before = self.judge.name
+        reworded = dict(QUESTIONS["added_claim"], instructions="Is anything new?")
+        with mock.patch.dict(QUESTIONS, {"added_claim": reworded}):
+            self.assertNotEqual(self.judge.name, before)
 
     def test_name_tracks_questions_and_threshold(self):
         names = {

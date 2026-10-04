@@ -21,7 +21,7 @@ from bookpolish.engine import (
     polish,
     preview,
 )
-from bookpolish.verify import JevVerifier
+from bookpolish.verify import SystemOneVerifier
 
 
 def _default_db() -> Path:
@@ -77,10 +77,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     run.add_argument(
         "--verify",
-        choices=["jev"],
-        help="re-check accepted edits with TypeSafe Jev (sends text to api.typesafe.ai; "
-        "needs TYPESAFE_API_KEY)",
+        metavar="URL",
+        help="re-check accepted edits with a System One server, e.g. a local Kev or Laya "
+        "at http://127.0.0.1:8009 (edited sentences are sent to it)",
     )
+    run.add_argument("--verify-model", default="", help="judge name; keys the cache")
     run.add_argument("--verify-threshold", type=float, default=0.7)
     args = parser.parse_args(argv)
     if args.ctx < 1:
@@ -100,7 +101,9 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         try:
             verifier = (
-                JevVerifier(threshold=args.verify_threshold) if args.verify == "jev" else None
+                SystemOneVerifier(args.verify, args.verify_model, args.verify_threshold)
+                if args.verify
+                else None
             )
             client = Server(args.host, args.model, timeout=args.timeout)
         except (ModelError, ValueError) as exc:

@@ -27,7 +27,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from bookpolish.engine import BookDB, Server, load_chapter, polish  # noqa: E402
-from bookpolish.verify import JevVerifier  # noqa: E402
+from bookpolish.verify import SystemOneVerifier  # noqa: E402
 
 SERVER = next(
     (Path.home() / ".huaepub" / "polish" / "llama-server").glob("*/llama-server.exe"), None
@@ -71,7 +71,8 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--model", required=True)
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--files", nargs="*", default=[str(p) for p in DEFAULT_FILES])
-    parser.add_argument("--verify", action="store_true", help="re-check edits with Jev")
+    parser.add_argument("--verify", metavar="URL", help="System One server to re-check edits")
+    parser.add_argument("--verify-model", default="")
     args = parser.parse_args(argv)
     out = ROOT / "_run" / "bench" / "results" / args.label
     out.mkdir(parents=True, exist_ok=True)
@@ -84,7 +85,9 @@ def main(argv: list[str]) -> int:
         reasons: Counter[str] = Counter()
         paragraphs = words = flagged = 0
         errors = []
-        verifier = JevVerifier() if args.verify else None
+        verifier = (
+            SystemOneVerifier(args.verify, args.verify_model) if args.verify else None
+        )
         start = time.time()
         for name in args.files:
             segments = load_chapter(Path(name))

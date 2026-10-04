@@ -14,7 +14,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from bookpolish.engine import BookDB, ModelError, Segment, polish  # noqa: E402
-from bookpolish.verify import JevVerifier  # noqa: E402
+from bookpolish.verify import HOSTED_JEV, SystemOneVerifier  # noqa: E402
 
 
 class Editor:
@@ -109,9 +109,9 @@ def http_error(code: int) -> urllib.error.HTTPError:
     return urllib.error.HTTPError("http://x", code, "err", {}, io.BytesIO(b""))
 
 
-class JevVerifierTests(unittest.TestCase):
+class SystemOneVerifierTests(unittest.TestCase):
     def setUp(self):
-        self.jev = JevVerifier(api_key="test", threshold=0.7, parallel=2)
+        self.jev = SystemOneVerifier("http://127.0.0.1:8009", "kev-0.8b", parallel=2)
         self.jev._sleep = mock.Mock()
 
     def tearDown(self):
@@ -134,13 +134,29 @@ class JevVerifierTests(unittest.TestCase):
             with self.assertRaisesRegex(ModelError, "verifier HTTP 401"):
                 self.jev.check("源", [("a", "b")])
 
-    def test_needs_a_key(self):
+    def test_local_server_sends_no_key(self):
+        with mock.patch("urllib.request.urlopen", side_effect=[jev_reply(0.1)]) as urlopen:
+            self.jev.check("源", [("a", "b")])
+        request = urlopen.call_args.args[0]
+        self.assertEqual(request.full_url, "http://127.0.0.1:8009/v1/systemone")
+        self.assertIsNone(request.get_header("Authorization"))
+
+    def test_hosted_jev_needs_a_key(self):
         with mock.patch.dict("os.environ", {}, clear=True):
             with self.assertRaises(ValueError):
-                JevVerifier()
+                SystemOneVerifier(HOSTED_JEV, "jev-latest")
 
-    def test_name_tracks_threshold(self):
-        self.assertNotEqual(self.jev.name, JevVerifier(api_key="k", threshold=0.8).name)
+    def test_model_name_is_required(self):
+        with self.assertRaises(ValueError):
+            SystemOneVerifier("http://127.0.0.1:8009", "")
+
+    def test_name_tracks_model_and_threshold(self):
+        names = {
+            SystemOneVerifier("http://127.0.0.1:8009", "kev-0.8b").name,
+            SystemOneVerifier("http://127.0.0.1:8009", "laya").name,
+            SystemOneVerifier("http://127.0.0.1:8009", "kev-0.8b", threshold=0.8).name,
+        }
+        self.assertEqual(len(names), 3)
 
 
 if __name__ == "__main__":

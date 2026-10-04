@@ -17,7 +17,7 @@ from bookpolish.engine import (
     polish,
     preview,
 )
-from bookpolish.verify import JevVerifier
+from bookpolish.verify import SystemOneVerifier
 
 __version__ = "0.1.0"
 
@@ -25,7 +25,7 @@ __all__ = [
     "POLICY",
     "BookDB",
     "Edit",
-    "JevVerifier",
+    "SystemOneVerifier",
     "ModelError",
     "Run",
     "Segment",

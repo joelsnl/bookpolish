@@ -3,13 +3,17 @@
 
 The regex gates see names, numbers, pronouns, person, negation, and
 conditionals. They cannot see a noun that now means a different thing
-(agarwood -> sandalwood), an invented detail, or a changed actor. JevVerifier
-asks TypeSafe's Jev four literal yes/no questions per edited sentence and
-rejects the edit when any answer reaches the threshold.
+(agarwood -> sandalwood), an invented detail, or a changed actor.
+SystemOneVerifier asks a System One decision model four literal yes/no
+questions per edited sentence and rejects the edit when any answer reaches
+the threshold. Any server that speaks the `POST /v1/systemone` contract
+works: Kev or Laya running locally, or TypeSafe's hosted Jev.
 
-Measured on 200 accepted Gemma edits plus 11 known misses and 60 injected noun
-swaps (reports/research-program.md): at 0.7 it flagged 9/11 misses, 50/60
-swaps, and 11/200 ordinary edits, about half of which were real drift.
+Measured with Jev 1.13 as the judge on 200 accepted Gemma edits plus 11 known
+misses and 60 injected noun swaps (reports/research-program.md): at 0.7 it
+flagged 9/11 misses, 50/60 swaps, and 11/200 ordinary edits, about half of
+which were real drift. A local judge must be measured the same way before
+its threshold is trusted (scripts/eval_judge.py).
 """
 
 from __future__ import annotations
@@ -20,6 +24,7 @@ import time
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
+from urllib.parse import urlparse
 
 from bookpolish.engine import ModelError
 
@@ -58,21 +63,38 @@ QUESTIONS = {
 _RETRY_STATUS = frozenset({429, 500, 502, 503, 504})
 
 
-class JevVerifier:
-    """Flags edited sentences whose meaning moved. Sends text to api.typesafe.ai."""
+HOSTED_JEV = "https://api.typesafe.ai"
+
+
+class SystemOneVerifier:
+    """Flags edited sentences whose meaning moved.
+
+    `url` is the server root; the text of each edit is sent there. `model`
+    names the judge and goes into the cache key, so name Kev-0.8B and Laya
+    differently even when they share a port.
+    """
 
     def __init__(
         self,
-        api_key: str | None = None,
+        url: str,
+        model: str,
         threshold: float = 0.7,
-        model: str = "jev-latest",
+        api_key: str | None = None,
         timeout: float = 60,
         retries: int = 3,
         parallel: int = 8,
     ):
-        self.api_key = api_key or os.environ.get("TYPESAFE_API_KEY", "")
-        if not self.api_key:
-            raise ValueError("JevVerifier needs TYPESAFE_API_KEY")
+        parsed = urlparse(url)
+        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+            raise ValueError("verifier url must be an http or https URL")
+        if not model:
+            raise ValueError("verifier model name is required; it keys the cache")
+        self.endpoint = url.rstrip("/") + "/v1/systemone"
+        self.api_key = api_key or ""
+        if url.rstrip("/") == HOSTED_JEV:
+            self.api_key = self.api_key or os.environ.get("TYPESAFE_API_KEY", "")
+            if not self.api_key:
+                raise ValueError("hosted Jev needs TYPESAFE_API_KEY")
         self.threshold = threshold
         self.model = model
         self.timeout = timeout
@@ -83,7 +105,7 @@ class JevVerifier:
     @property
     def name(self) -> str:
         """Part of the cache key: a different judge or threshold re-runs edits."""
-        return f"jev:{self.model}:{QUESTIONS_VERSION}:{self.threshold}"
+        return f"systemone:{self.model}:{QUESTIONS_VERSION}:{self.threshold}"
 
     def check(self, source: str, pairs: list[tuple[str, str]]) -> list[bool]:
         """True for each (machine, edited) pair that keeps its meaning."""
@@ -101,14 +123,11 @@ class JevVerifier:
 
     def _ask(self, state: dict) -> dict[str, float]:
         body = json.dumps({"state": state, "model": self.model, "questions": QUESTIONS})
+        headers = {"Content-Type": "application/json"}
+        if self.api_key:
+            headers["Authorization"] = f"Bearer {self.api_key}"
         request = urllib.request.Request(
-            "https://api.typesafe.ai/v1/systemone",
-            data=body.encode(),
-            headers={
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json",
-            },
-            method="POST",
+            self.endpoint, data=body.encode(), headers=headers, method="POST"
         )
         for attempt in range(self.retries + 1):
             try:

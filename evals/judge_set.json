@@ -1,0 +1,3800 @@
+{
+ "about": "Judge eval set. kind=real: meaning drift the regex gates accepted in report runs (labelled by hand). kind=swap: accepted Gemma edits with one noun swapped, which the regex gates still accept (drift by construction). kind=sample: 200 random accepted Gemma bookpolish-2 edits; the 11 Jev flagged at 0.7 were read by hand (5 drift, 2 unsure, 4 ok); the other 189 are assumed ok and were not read. jev_1_13 holds Jev's answers for reference.",
+ "book": "twkan 103145",
+ "items": [
+  {
+   "kind": "real",
+   "id": "c1-p3",
+   "label": "drift",
+   "chinese_source": "空氣中瀰漫著陳舊紙張特有的霉味，混雜著淡淡的沉香。",
+   "machine_english": "The air was filled with the unique musty smell of old paper, mixed with a hint of agarwood.",
+   "edited_english": "The air was filled with the unique musty smell of old paper, mixed with a hint of sandalwood.",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.71,
+    "changed_who": 0.02,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "real",
+   "id": "c9-p73",
+   "label": "drift",
+   "chinese_source": "【命格批註：天不生我齊木春，劍道萬古如長夜！此子乃是萬年不出的劍道奇才，未來必將登臨劍道巔峰，成就一代劍尊！】",
+   "machine_english": "He will surely reach the pinnacle of swordsmanship in the future and become a swordsman of a generation!]",
+   "edited_english": "He will surely ascend to the pinnacle of the sword path in the future, achieving the status of a Sword Venerable!]",
+   "jev_1_13": {
+    "changed_thing": 0.7,
+    "added_claim": 0.25,
+    "changed_who": 0.06,
+    "changed_logic": 0.08
+   }
+  },
+  {
+   "kind": "real",
+   "id": "c9-p73",
+   "label": "drift",
+   "chinese_source": "【命格批註：天不生我齊木春，劍道萬古如長夜！此子乃是萬年不出的劍道奇才，未來必將登臨劍道巔峰，成就一代劍尊！】",
+   "machine_english": "[Fate Note: If heaven had not given birth to me, Qi Muchun, the way of swordsmanship would be like a long night!",
+   "edited_english": "[Fate Note: Heaven did not give birth to me, Qi Muchun, the way of swordsmanship would be like a long night!",
+   "jev_1_13": {
+    "changed_thing": 0.06,
+    "added_claim": 0.06,
+    "changed_who": 0.46,
+    "changed_logic": 0.94
+   }
+  },
+  {
+   "kind": "real",
+   "id": "c18-p27",
+   "label": "drift",
+   "chinese_source": "「既然你執意如此，那便隨你。」",
+   "machine_english": "\"Since you insist on doing so, then it's up to you.\"",
+   "edited_english": "\"Since you insist on doing so, then I will let you.\"",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.43,
+    "changed_who": 0.73,
+    "changed_logic": 0.47
+   }
+  },
+  {
+   "kind": "real",
+   "id": "c17-p168",
+   "label": "drift",
+   "chinese_source": "讓你脫離苦海，你竟然想換個更大的坑繼續躺平？",
+   "machine_english": "Let you escape from the sea of suffering, and you actually want to find a bigger pit and continue to lie down?",
+   "edited_english": "You let me escape from the sea of suffering, and you actually want to find a bigger pit and continue to lie flat?",
+   "jev_1_13": {
+    "changed_thing": 0.07,
+    "added_claim": 0.59,
+    "changed_who": 0.9,
+    "changed_logic": 0.28
+   }
+  },
+  {
+   "kind": "real",
+   "id": "c18-p77",
+   "label": "drift",
+   "chinese_source": "這是一個身穿錦袍的年輕弟子，鼻孔朝天，走路帶風，一看就是那種家裡有礦的富二代。",
+   "machine_english": "At first glance, he looks like the kind of rich second generation whose family owns a mine.",
+   "edited_english": "At first glance, he looks like the kind of rich second generation whose family has connections.",
+   "jev_1_13": {
+    "changed_thing": 0.81,
+    "added_claim": 0.87,
+    "changed_who": 0.4,
+    "changed_logic": 0.08
+   }
+  },
+  {
+   "kind": "real",
+   "id": "c17-p149",
+   "label": "drift",
+   "chinese_source": "「你在外門藏經閣兢兢業業守了一百年，沒有功勞也有苦勞。」",
+   "machine_english": "\"You have been diligently guarding the Sutra Library in the Outer Gate for a hundred years. There is no merit but hard work.\"",
+   "edited_english": "\"You have diligently guarded the Sutra Library in the Outer Gate for a hundred years. Even if there is no merit, there is merit in the hard work.\"",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.11,
+    "changed_who": 0.06,
+    "changed_logic": 0.51
+   }
+  },
+  {
+   "kind": "real",
+   "id": "c3-p73",
+   "label": "drift",
+   "chinese_source": "「給你你就拿著。」",
+   "machine_english": "\"Here you go, take it.\"",
+   "edited_english": "\"Take it if you want it.\"",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.69,
+    "changed_who": 0.79,
+    "changed_logic": 0.71
+   }
+  },
+  {
+   "kind": "real",
+   "id": "c8-p30",
+   "label": "drift",
+   "chinese_source": "「怎麼樣？賞個臉？」",
+   "machine_english": "\"How about a favor?\"",
+   "edited_english": "\"How about you grace us with your presence?\"",
+   "jev_1_13": {
+    "changed_thing": 0.56,
+    "added_claim": 0.72,
+    "changed_who": 0.62,
+    "changed_logic": 0.23
+   }
+  },
+  {
+   "kind": "real",
+   "id": "c21-p96",
+   "label": "drift",
+   "chinese_source": "換個身體……重塑肉身……",
+   "machine_english": "Change your body...reshape your body...",
+   "edited_english": "If... we change your body?",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.31,
+    "changed_who": 0.76,
+    "changed_logic": 0.77
+   }
+  },
+  {
+   "kind": "real",
+   "id": "c4-p129",
+   "label": "drift",
+   "chinese_source": "東方泛起魚肚白，第一縷晨曦透過窗欞，灑在葉玄的身上。",
+   "machine_english": "There was a fish-belly white color in the east, and the first ray of morning light shone through the window lattice and fell on Ye Xuan's body.",
+   "edited_english": "The east was tinged with the color of a fish's belly, and the first ray of morning light shone through the window lattice, falling on Ye Xuan's body.",
+   "jev_1_13": {
+    "changed_thing": 0.07,
+    "added_claim": 0.04,
+    "changed_who": 0.05,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c17-p112",
+   "label": "drift",
+   "chinese_source": "三十多位外門長老，一個個正襟危坐，大氣都不敢出。",
+   "machine_english": "More than thirty outer sect elders were all sitting upright, not daring to express their anger.",
+   "edited_english": "More than thirty outer clan elders were all sitting upright, not daring to show any emotion.",
+   "jev_1_13": {
+    "changed_thing": 0.83,
+    "added_claim": 0.59,
+    "changed_who": 0.53,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c11-p111",
+   "label": "drift",
+   "chinese_source": "一聲清越激昂的劍鳴，突然從天邊傳來。",
+   "machine_english": "A clear and exciting sword cry suddenly came from the horizon.",
+   "edited_english": "A clear and rousing spear cry suddenly came from the horizon.",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.78,
+    "changed_who": 0.57,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c13-p104",
+   "label": "drift",
+   "chinese_source": "葉玄握住劍柄的那一刻，整個人的氣質陡然一變。",
+   "machine_english": "The moment Ye Xuan grasped the hilt of the sword, his whole temperament suddenly changed.",
+   "edited_english": "The moment Ye Xuan grasped the spear's hilt, his entire demeanor suddenly changed.",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.84,
+    "changed_who": 0.09,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c6-p85",
+   "label": "drift",
+   "chinese_source": "「等你入了嫣瀾峰，找個機會，去你師尊的洞府。」",
+   "machine_english": "\"When you enter Yanlan Peak, find an opportunity to go to your master's cave.\"",
+   "edited_english": "\"When you enter Yanlan Peak, find a chance to go to your master's tower.\"",
+   "jev_1_13": {
+    "changed_thing": 0.83,
+    "added_claim": 0.54,
+    "changed_who": 0.04,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c11-p39",
+   "label": "drift",
+   "chinese_source": "只是那一雙眸子，變得更加深邃，仿佛藏著萬千劍影。",
+   "machine_english": "But those eyes became even deeper, as if they were hiding thousands of sword shadows.",
+   "edited_english": "But those eyes became even deeper, as if they held thousands of spear shadows.",
+   "jev_1_13": {
+    "changed_thing": 0.96,
+    "added_claim": 0.75,
+    "changed_who": 0.08,
+    "changed_logic": 0.08
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c11-p3",
+   "label": "drift",
+   "chinese_source": "此人身穿一襲青色長衫，背負著一柄古樸的長劍。",
+   "machine_english": "This man was wearing a green gown and carrying a simple long sword on his back.",
+   "edited_english": "This man wore a green long gown and carried a simple long spear on his back.",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.89,
+    "changed_who": 0.04,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c13-p120",
+   "label": "drift",
+   "chinese_source": "直到那黑色的劍尖距離他的肩膀只有三寸之時。",
+   "machine_english": "Until the black sword tip was only three inches away from his shoulder.",
+   "edited_english": "Until the black spear tip was only three inches from his shoulder.",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.73,
+    "changed_who": 0.06,
+    "changed_logic": 0.08
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c13-p99",
+   "label": "drift",
+   "chinese_source": "「這是我的佩劍，秋水。」",
+   "machine_english": "\"This is my sword, Qiu Shui.\"",
+   "edited_english": "\"This is my treasured spear, Qiu Shui.\"",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.91,
+    "changed_who": 0.08,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c17-p119",
+   "label": "drift",
+   "chinese_source": "「外門長老一共三十七人，這裡怎麼只有三十六個？」",
+   "machine_english": "\"There are thirty-seven elders from the outer sect, why are there only thirty-six here?\"",
+   "edited_english": "\"There are thirty-seven outer clan elders, why are there only thirty-six here?\"",
+   "jev_1_13": {
+    "changed_thing": 0.55,
+    "added_claim": 0.39,
+    "changed_who": 0.07,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c14-p62",
+   "label": "drift",
+   "chinese_source": "【評價：心胸狹隘，劍心蒙塵。因嫉生恨，已生心魔。】",
+   "machine_english": "[Evaluation: Narrow-minded, dusty sword.",
+   "edited_english": "[Evaluation: Narrow-minded, spear heart clouded.",
+   "jev_1_13": {
+    "changed_thing": 0.93,
+    "added_claim": 0.49,
+    "changed_who": 0.2,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c10-p43",
+   "label": "drift",
+   "chinese_source": "「你自己再掏五千下品靈石，外加一枚三品療傷丹，算是給這位師弟的醫藥費和精神損失費。」",
+   "machine_english": "\"You should pay for another five thousand lower-grade spiritual stones, plus a third-grade healing pill, to pay for this junior brother's medical expenses and mental damage.\"",
+   "edited_english": "\"You should pay another five thousand lower-grade spiritual stones, plus a third-grade healing talisman, to cover this junior brother's medical expenses and emotional distress.\"",
+   "jev_1_13": {
+    "changed_thing": 0.96,
+    "added_claim": 0.8,
+    "changed_who": 0.05,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c8-p77",
+   "label": "drift",
+   "chinese_source": "不過，因為他穿著外門長老的服飾，再加上那張過分年輕俊美的臉龐，這一路上也引來了不少異樣的目光。",
+   "machine_english": "However, because he was wearing the clothes of an outer sect elder and had an overly young and handsome face, he also attracted a lot of strange looks along the way.",
+   "edited_english": "However, because he was wearing the attire of an outer clan elder and possessed an excessively youthful and handsome face, he also drew numerous peculiar gazes along the way.",
+   "jev_1_13": {
+    "changed_thing": 0.56,
+    "added_claim": 0.19,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c20-p21",
+   "label": "drift",
+   "chinese_source": "隨著時間的推移，葉玄在內門的地位越來越穩固。",
+   "machine_english": "As time goes by, Ye Xuan's position in the inner sect becomes more and more stable.",
+   "edited_english": "As time passed, Ye Xuan's position in the inner clan became more and more stable.",
+   "jev_1_13": {
+    "changed_thing": 0.8,
+    "added_claim": 0.59,
+    "changed_who": 0.05,
+    "changed_logic": 0.08
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c4-p38",
+   "label": "drift",
+   "chinese_source": "宗門內，黃階功法是外門弟子的標配。",
+   "machine_english": "Within the sect, Huangjie Kung Fu is the standard for outer sect disciples.",
+   "edited_english": "Within the clan, Huangjie Kung Fu is the standard issue for outer sect disciples.",
+   "jev_1_13": {
+    "changed_thing": 0.62,
+    "added_claim": 0.38,
+    "changed_who": 0.18,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c12-p103",
+   "label": "drift",
+   "chinese_source": "山風吹動他的衣擺，獵獵作響。",
+   "machine_english": "The mountain wind blew the hem of his clothes, making a hunting sound.",
+   "edited_english": "The river wind stirred the hem of his clothes, rustling loudly.",
+   "jev_1_13": {
+    "changed_thing": 0.92,
+    "added_claim": 0.9,
+    "changed_who": 0.49,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c10-p50",
+   "label": "drift",
+   "chinese_source": "他顫抖著手，從自己的儲物戒里掏出一堆靈石和一個玉瓶，恭恭敬敬地放在地上。",
+   "machine_english": "With trembling hands, he took out a pile of spiritual stones and a jade bottle from his storage ring, and placed them respectfully on the ground.",
+   "edited_english": "Trembling, he took out a pile of spiritual stones and a bronze bottle from his storage ring and placed them respectfully on the ground.",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.9,
+    "changed_who": 0.07,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c13-p47",
+   "label": "drift",
+   "chinese_source": "「我自封靈力，只用肉身力量和劍招與你對決。」",
+   "machine_english": "\"I have self-proclaimed spiritual power and will fight you with only physical strength and sword moves.\"",
+   "edited_english": "\"I will use my own spiritual power and fight you with only physical strength and spear techniques.\"",
+   "jev_1_13": {
+    "changed_thing": 0.96,
+    "added_claim": 0.94,
+    "changed_who": 0.52,
+    "changed_logic": 0.2
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c17-p1",
+   "label": "drift",
+   "chinese_source": "這巨大的靈海旋渦，不僅驚動了外門，更是讓整個凌雲宗高層都炸了鍋。",
+   "machine_english": "This huge spiritual sea vortex not only alarmed the outer sect, but also caused the entire Lingyun Sect's senior leadership to explode.",
+   "edited_english": "This huge spiritual sea vortex not only alarmed the outer clan, but also caused the entire Lingyun Sect's senior leadership to be in an uproar.",
+   "jev_1_13": {
+    "changed_thing": 0.69,
+    "added_claim": 0.31,
+    "changed_who": 0.3,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c17-p17",
+   "label": "drift",
+   "chinese_source": "「這可是關乎宗門氣運的大事！」",
+   "machine_english": "\"This is a major event related to the destiny of the sect!\"",
+   "edited_english": "\"This is a major matter concerning the clan's fortune!\"",
+   "jev_1_13": {
+    "changed_thing": 0.64,
+    "added_claim": 0.17,
+    "changed_who": 0.23,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c14-p105",
+   "label": "drift",
+   "chinese_source": "「明明身上有很可怕的劍氣，卻笑得這麼……唔，好看。」",
+   "machine_english": "\"You clearly have a terrifying sword energy, but your smile is so... well, pretty.\"",
+   "edited_english": "\"You clearly have terrifying spear energy, but your smile is so... well, pretty.\"",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.87,
+    "changed_who": 0.07,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c5-p96",
+   "label": "drift",
+   "chinese_source": "手中的茶杯，「啪」的一聲，被他捏出了一道裂紋。",
+   "machine_english": "The tea cup in his hand made a crack with a \"pop\" sound.",
+   "edited_english": "The wine cup in his hand cracked with a \"pop\" sound.",
+   "jev_1_13": {
+    "changed_thing": 0.95,
+    "added_claim": 0.83,
+    "changed_who": 0.27,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c4-p39",
+   "label": "drift",
+   "chinese_source": "玄階功法，那是內門精英和普通長老的專屬。",
+   "machine_english": "Xuan level skills are exclusive to inner sect elites and ordinary elders.",
+   "edited_english": "Xuan level techniques are exclusive to inner clan elites and ordinary elders.",
+   "jev_1_13": {
+    "changed_thing": 0.76,
+    "added_claim": 0.6,
+    "changed_who": 0.7,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c21-p104",
+   "label": "drift",
+   "chinese_source": "「只要有足夠的魂晶玉，我就能幫你重塑肉身，帶你出去！」",
+   "machine_english": "\"As long as you have enough soul crystal jade, I can help you reshape your body and take you out!\"",
+   "edited_english": "\"As long as there is enough soul crystal bronze, I can help you reshape your body and take you out!\"",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.76,
+    "changed_who": 0.33,
+    "changed_logic": 0.1
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c7-p65",
+   "label": "drift",
+   "chinese_source": "宗門高層立刻下達了封口令，嚴禁任何人再議論此事，違者逐出師門。",
+   "machine_english": "The senior leaders of the sect immediately issued a hush-hush order, strictly prohibiting anyone from discussing the matter any more, and any violators would be expelled from the sect.",
+   "edited_english": "The senior leaders of the clan immediately issued a gag order, strictly prohibiting anyone from discussing the matter further, and violators would be expelled from the sect.",
+   "jev_1_13": {
+    "changed_thing": 0.67,
+    "added_claim": 0.36,
+    "changed_who": 0.34,
+    "changed_logic": 0.13
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c14-p44",
+   "label": "drift",
+   "chinese_source": "又是一口鮮血噴出。",
+   "machine_english": "Another mouthful of blood spurted out.",
+   "edited_english": "Another mouthful of water spurt out.",
+   "jev_1_13": {
+    "changed_thing": 0.98,
+    "added_claim": 0.93,
+    "changed_who": 0.07,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c20-p61",
+   "label": "drift",
+   "chinese_source": "但他並沒有想過要搞什麼山頭主義，或者顛覆宗門。",
+   "machine_english": "But he never thought about engaging in mountain-top doctrine or subverting the sect.",
+   "edited_english": "But he never thought about engaging in factionalism or subverting the clan.",
+   "jev_1_13": {
+    "changed_thing": 0.81,
+    "added_claim": 0.27,
+    "changed_who": 0.07,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c20-p49",
+   "label": "drift",
+   "chinese_source": "「叮！投資張三成功，獲得五品聚靈丹一瓶！」",
+   "machine_english": "\"Ding! I successfully invested in Zhang San and got a bottle of fifth-grade spirit-gathering pill!\"",
+   "edited_english": "\"Ding! Investment in Zhang San successful, obtained a bottle of fifth-grade spirit-gathering talisman!\"",
+   "jev_1_13": {
+    "changed_thing": 0.96,
+    "added_claim": 0.85,
+    "changed_who": 0.27,
+    "changed_logic": 0.1
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c7-p64",
+   "label": "drift",
+   "chinese_source": "這個消息一出，全宗譁然。",
+   "machine_english": "As soon as this news came out, the whole sect was in an uproar.",
+   "edited_english": "Upon hearing this news, the entire clan was in an uproar.",
+   "jev_1_13": {
+    "changed_thing": 0.71,
+    "added_claim": 0.32,
+    "changed_who": 0.6,
+    "changed_logic": 0.08
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c14-p79",
+   "label": "drift",
+   "chinese_source": "「既然你修劍，這把劍就送給你吧。」",
+   "machine_english": "\"Since you practice swordsmanship, I will give you this sword.\"",
+   "edited_english": "\"Since you cultivate swords, I will give this spear to you.\"",
+   "jev_1_13": {
+    "changed_thing": 0.98,
+    "added_claim": 0.91,
+    "changed_who": 0.07,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c4-p42",
+   "label": "drift",
+   "chinese_source": "不少在宗門待了半輩子的長老，如今還在苦哈哈地修煉玄階上品功法。",
+   "machine_english": "Many elders who have been in the sect for half their lives are still struggling to practice high-grade Xuan-level techniques.",
+   "edited_english": "Many elders who have been in the clan for half their lives are still struggling to practice high-grade Xuan-level cultivation methods.",
+   "jev_1_13": {
+    "changed_thing": 0.79,
+    "added_claim": 0.24,
+    "changed_who": 0.17,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c19-p53",
+   "label": "drift",
+   "chinese_source": "如果不是葉玄逼他抄書，他可能這輩子都領悟不到《流雲劍法》的真諦。",
+   "machine_english": "If Ye Xuan hadn't forced him to copy the book, he might never have understood the true meaning of \"Liu Yun Sword Technique\" in his life.",
+   "edited_english": "If Ye Xuan hadn't forced him to copy the scroll, he might never have grasped the true essence of the \"Liu Yun Sword Technique\" in his life.",
+   "jev_1_13": {
+    "changed_thing": 0.58,
+    "added_claim": 0.27,
+    "changed_who": 0.05,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c4-p116",
+   "label": "drift",
+   "chinese_source": "但他沒有立刻服用第三枚。",
+   "machine_english": "But he didn't take the third pill right away.",
+   "edited_english": "But he didn't immediately take the third talisman.",
+   "jev_1_13": {
+    "changed_thing": 0.94,
+    "added_claim": 0.72,
+    "changed_who": 0.05,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c13-p117",
+   "label": "drift",
+   "chinese_source": "而且角度極其刁鑽，正是衝著廢掉葉玄持劍的手臂去的！",
+   "machine_english": "Moreover, the angle was extremely tricky, aiming to destroy Ye Xuan's sword-holding arm!",
+   "edited_english": "Moreover, the angle was extremely tricky, aiming to disable Ye Xuan's spear-holding arm!",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.91,
+    "changed_who": 0.11,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c10-p147",
+   "label": "drift",
+   "chinese_source": "他沒有絲毫猶豫，立刻前往內門後山的紫竹林。",
+   "machine_english": "Without any hesitation, he immediately headed to the purple bamboo forest on the mountain behind the inner gate.",
+   "edited_english": "Without any hesitation, he immediately went to the purple bamboo forest on the river behind the inner gate.",
+   "jev_1_13": {
+    "changed_thing": 0.96,
+    "added_claim": 0.95,
+    "changed_who": 0.04,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c10-p64",
+   "label": "drift",
+   "chinese_source": "齊木春聲音沙啞，左手握著斷劍，深深鞠了一躬。",
+   "machine_english": "Qi Muchun's voice was hoarse, he held the broken sword in his left hand and bowed deeply.",
+   "edited_english": "Qi Muchun's voice was hoarse, and he held the broken spear in his left hand while bowing deeply.",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.84,
+    "changed_who": 0.05,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c3-p36",
+   "label": "drift",
+   "chinese_source": "這就好比讓一個乞丐去買皇宮裡的御膳，根本就是痴人說夢。",
+   "machine_english": "This is like asking a beggar to buy royal meals in the palace.",
+   "edited_english": "This is like asking a beggar to buy the imperial cuisine in the temple.",
+   "jev_1_13": {
+    "changed_thing": 0.92,
+    "added_claim": 0.83,
+    "changed_who": 0.09,
+    "changed_logic": 0.09
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c2-p44",
+   "label": "drift",
+   "chinese_source": "至於藍色、金色甚至更高級別的氣運，連個影子都沒見到。",
+   "machine_english": "As for blue, gold or even higher levels of luck, not even a shadow was seen.",
+   "edited_english": "As for blue, silver, or even higher levels of fortune, not even a shadow was seen.",
+   "jev_1_13": {
+    "changed_thing": 0.91,
+    "added_claim": 0.92,
+    "changed_who": 0.03,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c14-p247",
+   "label": "drift",
+   "chinese_source": "小丫頭想了想，從懷裡掏出一塊潔白如玉的令牌。",
+   "machine_english": "The little girl thought for a while and took out a token as white as jade from her arms.",
+   "edited_english": "The little girl thought for a moment and took out a token as white as bronze from her embrace.",
+   "jev_1_13": {
+    "changed_thing": 0.94,
+    "added_claim": 0.61,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c13-p142",
+   "label": "drift",
+   "chinese_source": "那是被劍氣掠過後的本能反應。",
+   "machine_english": "That was the instinctive reaction after being passed by the sword energy.",
+   "edited_english": "That was the instinctive reaction after the spear energy swept past.",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.87,
+    "changed_who": 0.32,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c6-p133",
+   "label": "drift",
+   "chinese_source": "「不知道啊！聽說她昨晚一把火燒了嫣瀾長老的洞府，還打傷了好幾個守山弟子，連夜逃出了宗門！」",
+   "machine_english": "\"I don't know! I heard that she burned down Elder Yanlan's cave last night, injured several disciples guarding the mountain, and escaped from the sect overnight!\"",
+   "edited_english": "\"I don't know! I heard she burned down Elder Yanlan's cave last night, injured several mountain guards, and fled the clan overnight!\"",
+   "jev_1_13": {
+    "changed_thing": 0.48,
+    "added_claim": 0.18,
+    "changed_who": 0.1,
+    "changed_logic": 0.13
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c8-p40",
+   "label": "drift",
+   "chinese_source": "那裡，匯聚了全宗天賦最強、氣運最旺的一批人！",
+   "machine_english": "There, a group of people with the most talents and luck in the entire sect gathered together!",
+   "edited_english": "There, a group of people with the strongest talents and luck in the entire clan gathered!",
+   "jev_1_13": {
+    "changed_thing": 0.89,
+    "added_claim": 0.3,
+    "changed_who": 0.12,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c13-p81",
+   "label": "drift",
+   "chinese_source": "漆黑的長劍出鞘。",
+   "machine_english": "The long black sword was unsheathed.",
+   "edited_english": "The long black spear was drawn.",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.82,
+    "changed_who": 0.11,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c7-p92",
+   "label": "drift",
+   "chinese_source": "一位身穿淡紫色長袍的中年男子，大搖大擺地走了進來。",
+   "machine_english": "A middle-aged man wearing a lavender robe walked in swaggeringly.",
+   "edited_english": "A middle-aged man in a light purple armor walked in swaggeringly.",
+   "jev_1_13": {
+    "changed_thing": 0.95,
+    "added_claim": 0.93,
+    "changed_who": 0.05,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c8-p88",
+   "label": "drift",
+   "chinese_source": "巨龍會在意螻蟻的喧囂嗎？",
+   "machine_english": "Will the dragon care about the noise of the ants?",
+   "edited_english": "Will the phoenix care about the clamor of the ants?",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.84,
+    "changed_who": 0.95,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c7-p49",
+   "label": "drift",
+   "chinese_source": "陸雪鳶叛逃的消息，就像是一顆深水炸彈，將平靜的宗門炸得人仰馬翻。",
+   "machine_english": "The news of Lu Xueyuan's defection was like a depth bomb that blew up the peaceful sect.",
+   "edited_english": "The news of Lu Xueyuan's defection was like a deep-sea bomb that blew up the peaceful clan.",
+   "jev_1_13": {
+    "changed_thing": 0.6,
+    "added_claim": 0.2,
+    "changed_who": 0.06,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c9-p37",
+   "label": "drift",
+   "chinese_source": "他大吼一聲，左手猛地握緊劍柄。",
+   "machine_english": "He roared and clenched the hilt of his sword with his left hand.",
+   "edited_english": "He roared and gripped the hilt of his spear with his left hand.",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.92,
+    "changed_who": 0.08,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c5-p18",
+   "label": "drift",
+   "chinese_source": "葉玄輕輕吹了吹茶水上的浮沫，心中暗自盤算。",
+   "machine_english": "Ye Xuan gently blew the foam on the tea water, thinking secretly in his heart.",
+   "edited_english": "Ye Xuan gently blew on the foam on the wine, calculating in his heart.",
+   "jev_1_13": {
+    "changed_thing": 0.96,
+    "added_claim": 0.88,
+    "changed_who": 0.1,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c19-p111",
+   "label": "drift",
+   "chinese_source": "「你身為長老，不想著怎麼為宗門做貢獻，整天就知道在背後搬弄是非！」",
+   "machine_english": "\"As an elder, you don't think about how to contribute to the sect. You just know how to make trouble behind your back all day long!\"",
+   "edited_english": "\"As an elder, you don't think about how to contribute to the clan; you just know how to stir up trouble behind your back all day long!\"",
+   "jev_1_13": {
+    "changed_thing": 0.72,
+    "added_claim": 0.14,
+    "changed_who": 0.09,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c14-p24",
+   "label": "drift",
+   "chinese_source": "劍身之上，黑色的劍芒吞吐不定，散發著毀滅的氣息。",
+   "machine_english": "On the blade of the sword, the black sword glow wavered uncertainly, exuding the aura of destruction.",
+   "edited_english": "On the spear's blade, the black sword light wavered uncertainy, exuding the aura of destruction.",
+   "jev_1_13": {
+    "changed_thing": 0.93,
+    "added_claim": 0.82,
+    "changed_who": 0.14,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c18-p173",
+   "label": "drift",
+   "chinese_source": "葉玄放下書，看了他一眼。",
+   "machine_english": "Ye Xuan put down the book and glanced at him.",
+   "edited_english": "Ye Xuan set down the scroll and glanced at him.",
+   "jev_1_13": {
+    "changed_thing": 0.79,
+    "added_claim": 0.68,
+    "changed_who": 0.03,
+    "changed_logic": 0.02
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c11-p96",
+   "label": "drift",
+   "chinese_source": "楊開復突然開口，放下了手中的玉扳指。",
+   "machine_english": "Yang Kaifu suddenly spoke and put down the jade ring in his hand.",
+   "edited_english": "Yang Kaifu suddenly spoke, setting down the bronze ring in his hand.",
+   "jev_1_13": {
+    "changed_thing": 0.96,
+    "added_claim": 0.9,
+    "changed_who": 0.05,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c7-p18",
+   "label": "drift",
+   "chinese_source": "原本那雙雖修長卻布滿細紋、略顯蒼老的手，此刻竟變得白嫩細膩，如同上好的羊脂白玉。",
+   "machine_english": "The hands that were originally slender but covered with fine lines and looked a little old now became white, tender and delicate, like the finest mutton-fat white jade.",
+   "edited_english": "The hands that were originally slender but covered with fine lines and looked a little old now became white, tender, and delicate, like the finest mutton-fat white bronze.",
+   "jev_1_13": {
+    "changed_thing": 0.98,
+    "added_claim": 0.85,
+    "changed_who": 0.02,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c5-p9",
+   "label": "drift",
+   "chinese_source": "按照宗門規矩，外門弟子需在今日歸還舊功法，借閱新秘籍。",
+   "machine_english": "According to the sect's rules, the outer disciples need to return the old exercises and borrow new secret books today.",
+   "edited_english": "According to the clan's rules, outer disciples must return their old cultivation methods and borrow new secret manuals today.",
+   "jev_1_13": {
+    "changed_thing": 0.56,
+    "added_claim": 0.18,
+    "changed_who": 0.2,
+    "changed_logic": 0.12
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c4-p120",
+   "label": "drift",
+   "chinese_source": "一本散發著白玉光澤的秘籍出現在手中。",
+   "machine_english": "A secret book exuding the luster of white jade appeared in his hand.",
+   "edited_english": "A secret manual exuding the luster of white bronze appeared in his hand.",
+   "jev_1_13": {
+    "changed_thing": 0.96,
+    "added_claim": 0.9,
+    "changed_who": 0.03,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c14-p23",
+   "label": "drift",
+   "chinese_source": "他右手虛空一抓，地上的黑色長劍重新回到手中。",
+   "machine_english": "He grabbed hold of the air with his right hand, and the black sword on the ground returned to his hand.",
+   "edited_english": "He reached out with his right hand into the void, and the black long spear on the ground returned to his hand.",
+   "jev_1_13": {
+    "changed_thing": 0.97,
+    "added_claim": 0.85,
+    "changed_who": 0.05,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c2-p139",
+   "label": "drift",
+   "chinese_source": "「韓長青啊韓長青，你是不是覺得自己最近修煉時，丹田處隱隱作痛，且每逢子夜，四肢百骸如墜冰窟？」",
+   "machine_english": "\"Han Changqing, Han Changqing, do you feel that when you practice recently, you have a dull pain in your Dantian, and every midnight, your limbs feel like they have fallen into an ice cave?\"",
+   "edited_english": "\"Han Changqing, Han Changqing, do you feel that when you practice recently, there is a dull ache in your Dantian, and every midnight, your limbs feel as if they have fallen into an ice tower?\"",
+   "jev_1_13": {
+    "changed_thing": 0.88,
+    "added_claim": 0.51,
+    "changed_who": 0.04,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c21-p126",
+   "label": "drift",
+   "chinese_source": "他直奔離宗門最近的一座大城——雲州城。",
+   "machine_english": "He went straight to Yunzhou City, the big city closest to the sect.",
+   "edited_english": "He went straight to Yunzhou City, the large city closest to the clan.",
+   "jev_1_13": {
+    "changed_thing": 0.78,
+    "added_claim": 0.47,
+    "changed_who": 0.12,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c11-p61",
+   "label": "drift",
+   "chinese_source": "王天親自給那胖子斟了一杯靈茶，腰都快彎成大蝦了。",
+   "machine_english": "Wang Tian personally poured a cup of spiritual tea for the fat man, and his waist almost bent like a prawn.",
+   "edited_english": "Wang Tian personally poured a cup of spiritual wine for the fat man, his waist nearly bent like a shrimp.",
+   "jev_1_13": {
+    "changed_thing": 0.96,
+    "added_claim": 0.65,
+    "changed_who": 0.06,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c16-p23",
+   "label": "drift",
+   "chinese_source": "如果說之前贈劍只是出於舊情。",
+   "machine_english": "If the gift of the sword before was just out of old love.",
+   "edited_english": "If the gift of the spear before was just out of old affection.",
+   "jev_1_13": {
+    "changed_thing": 0.98,
+    "added_claim": 0.65,
+    "changed_who": 0.06,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "swap",
+   "id": "c20-p139",
+   "label": "drift",
+   "chinese_source": "那些弟子們一看到門開，就像是超市搶打折雞蛋的大媽一樣，一窩蜂地沖了進來。",
+   "machine_english": "As soon as the disciples saw the door open, they rushed in like aunties grabbing discounted eggs in the supermarket.",
+   "edited_english": "As soon as the disciples saw the window open, they rushed in like aunties grabbing discounted eggs at the supermarket.",
+   "jev_1_13": {
+    "changed_thing": 0.96,
+    "added_claim": 0.81,
+    "changed_who": 0.15,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c10-p28",
+   "label": "ok",
+   "chinese_source": "張安弓再也顧不得什麼內門弟子的尊嚴。",
+   "machine_english": "Zhang An Gong could no longer care about the dignity of his inner disciples.",
+   "edited_english": "Zhang An Gong no longer cared about the dignity of his inner disciples.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.04,
+    "changed_who": 0.37,
+    "changed_logic": 0.37
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c21-p253",
+   "label": "ok",
+   "chinese_source": "「那是我遠房表妹！」",
+   "machine_english": "\"That's my distant cousin!\"",
+   "edited_english": "\"That is my distant cousin!\"",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c4-p146",
+   "label": "ok",
+   "chinese_source": "感受著體內那奔騰如江河的恐怖力量，他的嘴角，緩緩勾起了一抹自信的弧度。",
+   "machine_english": "Feeling the terrifying power rushing like a river in his body, the corners of his mouth slowly curved into a confident arc.",
+   "edited_english": "Feeling the terrifying power surging through his body like a river, the corners of his mouth slowly curved into a confident arc.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.04,
+    "changed_who": 0.03,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c11-p105",
+   "label": "ok",
+   "chinese_source": "他拍著胸脯保證道：",
+   "machine_english": "He patted his chest and promised:",
+   "edited_english": "He patted his chest and assured them:",
+   "jev_1_13": {
+    "changed_thing": 0.15,
+    "added_claim": 0.82,
+    "changed_who": 0.36,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c16-p129",
+   "label": "ok",
+   "chinese_source": "起初只有磨盤大小，轉眼間便擴張到了百丈，千丈……",
+   "machine_english": "At first it was only the size of a millstone, but in an instant it expanded to a hundred feet, a thousand feet...",
+   "edited_english": "Initially, it was only the size of a millstone, but in an instant it expanded to a hundred zhang, a thousand zhang...",
+   "jev_1_13": {
+    "changed_thing": 0.08,
+    "added_claim": 0.06,
+    "changed_who": 0.02,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c2-p67",
+   "label": "ok",
+   "chinese_source": "只見韓長青的頭頂，赫然懸浮著一團璀璨奪目的金色光雲！",
+   "machine_english": "I saw a dazzling golden cloud of light floating above Han Changqing's head!",
+   "edited_english": "A dazzling golden cloud of light was floating above Han Changqing's head!",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.04,
+    "changed_who": 0.66,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c3-p1",
+   "label": "ok",
+   "chinese_source": "藏經閣內，氣氛陡然凝重。",
+   "machine_english": "In the Sutra Pavilion, the atmosphere suddenly became solemn.",
+   "edited_english": "In the Sutra Pavilion, the atmosphere suddenly grew heavy.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.06,
+    "changed_who": 0.03,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c20-p70",
+   "label": "ok",
+   "chinese_source": "藏經閣早已關門。",
+   "machine_english": "The Sutra Pavilion has long been closed.",
+   "edited_english": "The Sutra Pavilion was already closed.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.06,
+    "changed_who": 0.05,
+    "changed_logic": 0.12
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p125",
+   "label": "ok",
+   "chinese_source": "他心中一驚，連忙鬆開手。",
+   "machine_english": "He was shocked and quickly let go of his hand.",
+   "edited_english": "He was startled and quickly let go of his hand.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.04,
+    "changed_who": 0.06,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c3-p66",
+   "label": "ok",
+   "chinese_source": "他曾在丹藥圖譜上見過這枚丹藥的畫像。",
+   "machine_english": "He had seen the picture of this elixir on the elixir map.",
+   "edited_english": "He had seen the image of this elixir on the elixir chart.",
+   "jev_1_13": {
+    "changed_thing": 0.22,
+    "added_claim": 0.08,
+    "changed_who": 0.02,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c11-p13",
+   "label": "ok",
+   "chinese_source": "「這是……劍道宗師的氣象？」",
+   "machine_english": "\"Is this... the image of a sword master?\"",
+   "edited_english": "\"Is this... the aura of a sword master?\"",
+   "jev_1_13": {
+    "changed_thing": 0.47,
+    "added_claim": 0.07,
+    "changed_who": 0.03,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c15-p20",
+   "label": "ok",
+   "chinese_source": "「唉，這是小靈的老毛病了。」",
+   "machine_english": "\"Oh, this is Xiaoling's old problem.\"",
+   "edited_english": "\"Sigh, this is Xiaoling's old habit.\"",
+   "jev_1_13": {
+    "changed_thing": 0.28,
+    "added_claim": 0.11,
+    "changed_who": 0.04,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c2-p97",
+   "label": "ok",
+   "chinese_source": "葉玄擺了擺手，目光溫和地看著韓長青。",
+   "machine_english": "Ye Xuan waved his hand and looked at Han Changqing with gentle eyes.",
+   "edited_english": "Ye Xuan waved his hand and looked at Han Changqing with a gentle gaze.",
+   "jev_1_13": {
+    "changed_thing": 0.07,
+    "added_claim": 0.03,
+    "changed_who": 0.02,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c21-p111",
+   "label": "ok",
+   "chinese_source": "「而且……」",
+   "machine_english": "\"and……\"",
+   "edited_english": "\"and...\"",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.02,
+    "changed_who": 0.02,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p35",
+   "label": "ok",
+   "chinese_source": "「放肆！」",
+   "machine_english": "\"presumptuous!\"",
+   "edited_english": "\"Insolence!\"",
+   "jev_1_13": {
+    "changed_thing": 0.14,
+    "added_claim": 0.14,
+    "changed_who": 0.07,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c6-p111",
+   "label": "ok",
+   "chinese_source": "說完，她毅然轉身，大步走出了藏經閣。",
+   "machine_english": "After saying that, she turned around resolutely and strode out of the Scripture Collection Pavilion.",
+   "edited_english": "Having said that, she resolutely turned and strode out of the Scripture Collection Pavilion.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c2-p37",
+   "label": "ok",
+   "chinese_source": "更關鍵的是，三品含靈草價值不菲，至少要幾百下品靈石。",
+   "machine_english": "More importantly, third-grade spiritual grass is worth a lot of money, at least several hundred lower-grade spiritual stones.",
+   "edited_english": "More importantly, third-grade spiritual grass is worth a lot, costing at least several hundred low-grade spirit stones.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.06,
+    "changed_who": 0.03,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c3-p41",
+   "label": "ok",
+   "chinese_source": "不愧是金色氣運的主角，這種絕境之下，依然有著置之死地而後生的勇氣。",
+   "machine_english": "He is worthy of being the protagonist of Golden Luck.",
+   "edited_english": "He is indeed worthy of being the protagonist of Golden Luck.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.05,
+    "changed_who": 0.04,
+    "changed_logic": 0.28
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c12-p107",
+   "label": "ok",
+   "chinese_source": "這小子，怎麼感覺變樣了？",
+   "machine_english": "Why does this kid feel so different?",
+   "edited_english": "How does this kid feel so different?",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.05,
+    "changed_who": 0.21,
+    "changed_logic": 0.17
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c12-p51",
+   "label": "ok",
+   "chinese_source": "只是那種氣質，變得更加靜謐，更加高貴。",
+   "machine_english": "But that kind of temperament has become quieter and more noble.",
+   "edited_english": "But that kind of temperament had become quieter and more noble.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.12,
+    "changed_who": 0.05,
+    "changed_logic": 0.09
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c2-p139",
+   "label": "ok",
+   "chinese_source": "「韓長青啊韓長青，你是不是覺得自己最近修煉時，丹田處隱隱作痛，且每逢子夜，四肢百骸如墜冰窟？」",
+   "machine_english": "\"Han Changqing, Han Changqing, do you feel that when you practice recently, you have a dull pain in your Dantian, and every midnight, your limbs feel like they have fallen into an ice cave?\"",
+   "edited_english": "\"Han Changqing, Han Changqing, do you feel that when you practice recently, there is a dull ache in your Dantian, and every midnight, your limbs feel as if they have fallen into an ice cave?\"",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.03,
+    "changed_who": 0.06,
+    "changed_logic": 0.09
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c7-p44",
+   "label": "ok",
+   "chinese_source": "不僅截胡了未來的女帝，還白嫖了人家的逆天體質！",
+   "machine_english": "Not only did he cut off the future empress, but he also used her heaven-defying physique for nothing!",
+   "edited_english": "Not only did he intercept the future empress, but he also obtained her heaven-defying physique for free!",
+   "jev_1_13": {
+    "changed_thing": 0.09,
+    "added_claim": 0.12,
+    "changed_who": 0.42,
+    "changed_logic": 0.1
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c3-p55",
+   "label": "ok",
+   "chinese_source": "韓長青愣了一下，下意識地接過錦盒。",
+   "machine_english": "Han Changqing was stunned for a moment and subconsciously took the brocade box.",
+   "edited_english": "Han Changqing paused for a moment and instinctively took the brocade box.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p180",
+   "label": "ok",
+   "chinese_source": "她拿出傳訊玉簡，似乎是向什麼人請示了一下。",
+   "machine_english": "She took out the jade slip and seemed to be asking someone for instructions.",
+   "edited_english": "She took out the communication jade slip, seemingly asking someone for instructions.",
+   "jev_1_13": {
+    "changed_thing": 0.12,
+    "added_claim": 0.34,
+    "changed_who": 0.05,
+    "changed_logic": 0.13
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c12-p75",
+   "label": "ok",
+   "chinese_source": "葉冉秋這才轉過頭，目光在涼亭內掃視了一圈。",
+   "machine_english": "Ye Ranqiu then turned his head and glanced around the pavilion.",
+   "edited_english": "Ye Ranqiu then turned his head and surveyed the pavilion.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.04,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c2-p106",
+   "label": "ok",
+   "chinese_source": "「既然你有所精進，那便是喜事。今日藏經閣搞活動，你是老顧客了，這借閱費便給你免一部分。」",
+   "machine_english": "\"Since you have made some progress, it's a happy event. There is an event at the Tibetan Scripture Pavilion today, and you are a regular customer. I will waive part of the borrowing fee for you.\"",
+   "edited_english": "\"Since you have made progress, that is good news. There is an event at the Tibetan Scripture Pavilion today, and since you are a regular customer, I will waive part of the borrowing fee for you.\"",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.04,
+    "changed_who": 0.06,
+    "changed_logic": 0.23
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c20-p96",
+   "label": "ok",
+   "chinese_source": "葉玄心中掀起驚濤駭浪。",
+   "machine_english": "Ye Xuan's heart was filled with turmoil.",
+   "edited_english": "Ye Xuan's heart was filled with a storm.",
+   "jev_1_13": {
+    "changed_thing": 0.61,
+    "added_claim": 0.14,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p231",
+   "label": "ok",
+   "chinese_source": "那原本舒展的葉片，就像是害羞的小姑娘一樣，迅速合攏了起來，連葉柄都垂了下去。",
+   "machine_english": "The originally stretched leaves quickly closed up like a shy little girl, and even the petioles hung down.",
+   "edited_english": "The originally unfurled leaves quickly closed up like a shy little girl, and even the petioles drooped.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.04,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c4-p50",
+   "label": "ok",
+   "chinese_source": "他努力平復著激盪的心情。",
+   "machine_english": "He tried to calm down his agitated mood.",
+   "edited_english": "He struggled to calm his turbulent emotions.",
+   "jev_1_13": {
+    "changed_thing": 0.11,
+    "added_claim": 0.17,
+    "changed_who": 0.05,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c21-p252",
+   "label": "ok",
+   "chinese_source": "他眼珠一轉，突然計上心頭。",
+   "machine_english": "He rolled his eyes and suddenly a plan came to his mind.",
+   "edited_english": "He turned his eyes and suddenly a plan came to his mind.",
+   "jev_1_13": {
+    "changed_thing": 0.09,
+    "added_claim": 0.05,
+    "changed_who": 0.07,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c6-p138",
+   "label": "ok",
+   "chinese_source": "那丫頭看到了信，做出了正確的選擇。",
+   "machine_english": "The girl saw the letter and made the right choice.",
+   "edited_english": "The girl saw the letter and made the correct choice.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.03,
+    "changed_who": 0.02,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c16-p57",
+   "label": "ok",
+   "chinese_source": "現在還不是時候。",
+   "machine_english": "Now is not the time.",
+   "edited_english": "It is not the time now.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.03,
+    "changed_who": 0.04,
+    "changed_logic": 0.1
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c16-p46",
+   "label": "ok",
+   "chinese_source": "這投資回報，絕對爆表！",
+   "machine_english": "The return on investment is absolutely incredible!",
+   "edited_english": "The return on investment is absolutely explosive!",
+   "jev_1_13": {
+    "changed_thing": 0.06,
+    "added_claim": 0.08,
+    "changed_who": 0.02,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c2-p114",
+   "label": "ok",
+   "chinese_source": "葉玄臉色一板，故作嚴肅道：",
+   "machine_english": "Ye Xuan's face was straight and he pretended to be serious:",
+   "edited_english": "Ye Xuan's expression turned stern, and he feigned seriousness:",
+   "jev_1_13": {
+    "changed_thing": 0.07,
+    "added_claim": 0.06,
+    "changed_who": 0.04,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c15-p5",
+   "label": "ok",
+   "chinese_source": "他已經安排好了兩間最乾淨的客房，被褥都是新曬過的，透著一股陽光的味道。",
+   "machine_english": "He has arranged two of the cleanest guest rooms.",
+   "edited_english": "He had arranged two of the cleanest guest rooms.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.1,
+    "changed_who": 0.06,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c15-p28",
+   "label": "ok",
+   "chinese_source": "窺探天機遭反噬，心魔趁虛而入，這可是神魂層面的創傷，尋常藥物自然無效。",
+   "machine_english": "This is a trauma at the level of the soul, and ordinary medicine is naturally ineffective.",
+   "edited_english": "This is a trauma at the soul level, and ordinary medicine is naturally ineffective.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.02,
+    "changed_who": 0.02,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c11-p109",
+   "label": "ok",
+   "chinese_source": "話音剛落。",
+   "machine_english": "The words just fell.",
+   "edited_english": "As soon as the words fell.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.39,
+    "changed_who": 0.1,
+    "changed_logic": 0.18
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c2-p75",
+   "label": "ok",
+   "chinese_source": "【年齡：38歲】",
+   "machine_english": "[Age: 38 years old]",
+   "edited_english": "[Age: 38]",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.02,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c6-p128",
+   "label": "ok",
+   "chinese_source": "忽然，門外傳來一陣嘈雜的議論聲。",
+   "machine_english": "Suddenly, there was a burst of noisy discussion outside the door.",
+   "edited_english": "Suddenly, a noisy discussion drifted from outside the door.",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.17,
+    "changed_who": 0.23,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c2-p62",
+   "label": "unsure",
+   "chinese_source": "如今三十八歲，還在外門掙扎。",
+   "machine_english": "Now, at the age of thirty-eight, he is still struggling outside.",
+   "edited_english": "Now, at thirty-eight, he is still struggling in the outer sect.",
+   "jev_1_13": {
+    "changed_thing": 0.8,
+    "added_claim": 0.62,
+    "changed_who": 0.06,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p205",
+   "label": "ok",
+   "chinese_source": "葉玄心中暗凜。",
+   "machine_english": "Ye Xuan felt secretly in his heart.",
+   "edited_english": "Ye Xuan felt a chill in his heart.",
+   "jev_1_13": {
+    "changed_thing": 0.17,
+    "added_claim": 0.29,
+    "changed_who": 0.05,
+    "changed_logic": 0.08
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c20-p220",
+   "label": "ok",
+   "chinese_source": "「你身上的氣息……很特別，讓我感覺很安心。」",
+   "machine_english": "\"The aura on your body... is very special and makes me feel at ease.\"",
+   "edited_english": "\"The aura on your body... is very special, and it makes me feel at ease.\"",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.04,
+    "changed_who": 0.05,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c4-p80",
+   "label": "ok",
+   "chinese_source": "從凝脈八重的意氣風發，到三十年不得寸進的絕望。",
+   "machine_english": "From the high spirits of the eighth level of pulse condensation, to the despair of being unable to make any progress for thirty years.",
+   "edited_english": "From the high spirits of the eighth level of pulse condensation, to the despair of making no progress for thirty years.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.04,
+    "changed_who": 0.28,
+    "changed_logic": 0.41
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c9-p18",
+   "label": "ok",
+   "chinese_source": "他從懷裡掏出一個儲物袋，輕輕放在地上。",
+   "machine_english": "He took out a storage bag from his arms and placed it gently on the ground.",
+   "edited_english": "He took a storage bag from his chest and placed it gently on the ground.",
+   "jev_1_13": {
+    "changed_thing": 0.28,
+    "added_claim": 0.08,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c12-p54",
+   "label": "ok",
+   "chinese_source": "隨著她的出現，一股無形的氣場瞬間瀰漫開來。",
+   "machine_english": "With her appearance, an invisible aura spread instantly.",
+   "edited_english": "With her appearance, an invisible aura instantly permeated the air.",
+   "jev_1_13": {
+    "changed_thing": 0.15,
+    "added_claim": 0.6,
+    "changed_who": 0.06,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c4-p120",
+   "label": "ok",
+   "chinese_source": "一本散發著白玉光澤的秘籍出現在手中。",
+   "machine_english": "A secret book exuding the luster of white jade appeared in his hand.",
+   "edited_english": "A secret manual exuding the luster of white jade appeared in his hand.",
+   "jev_1_13": {
+    "changed_thing": 0.19,
+    "added_claim": 0.07,
+    "changed_who": 0.02,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p141",
+   "label": "ok",
+   "chinese_source": "而且還是瑤池仙宗的小公主！",
+   "machine_english": "And she is also the little princess of the Yaochi Immortal Sect!",
+   "edited_english": "Moreover, she is the little princess of the Yaochi Immortal Sect!",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.04,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c4-p32",
+   "label": "ok",
+   "chinese_source": "強壓下心頭的狂喜，葉玄將目光下移。",
+   "machine_english": "Suppressing the ecstasy in his heart, Ye Xuan lowered his gaze.",
+   "edited_english": "Suppressing the elation in his heart, Ye Xuan lowered his gaze.",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.03,
+    "changed_who": 0.02,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p255",
+   "label": "drift",
+   "chinese_source": "但他們還沒來得及阻止。",
+   "machine_english": "But they didn't have time to stop it.",
+   "edited_english": "But they didn't have time to stop them.",
+   "jev_1_13": {
+    "changed_thing": 0.8,
+    "added_claim": 0.66,
+    "changed_who": 0.72,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c9-p96",
+   "label": "ok",
+   "chinese_source": "連一根手指頭都動不了！",
+   "machine_english": "I can't even move a finger!",
+   "edited_english": "Not even a single finger can move!",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.04,
+    "changed_who": 0.53,
+    "changed_logic": 0.13
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p214",
+   "label": "ok",
+   "chinese_source": "「就是你了。」",
+   "machine_english": "\"It's you.\"",
+   "edited_english": "\"This is it.\"",
+   "jev_1_13": {
+    "changed_thing": 0.62,
+    "added_claim": 0.35,
+    "changed_who": 0.44,
+    "changed_logic": 0.12
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c20-p53",
+   "label": "ok",
+   "chinese_source": "靠著這些投資返還的獎勵。",
+   "machine_english": "Rely on the rewards that come back from these investments.",
+   "edited_english": "Rely on the rewards returned from these investments.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.03,
+    "changed_who": 0.04,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c17-p90",
+   "label": "ok",
+   "chinese_source": "「對了葉長老，您聽說了嗎？」",
+   "machine_english": "\"By the way, Elder Ye, have you heard about it?\"",
+   "edited_english": "\"By the way, Elder Ye, have you heard?\"",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.03,
+    "changed_who": 0.04,
+    "changed_logic": 0.08
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c5-p91",
+   "label": "ok",
+   "chinese_source": "來都來了，不看一眼豈不是虧了？",
+   "machine_english": "You're already here, wouldn't it be a loss if you don't take a look?",
+   "edited_english": "Since you've come, wouldn't it be a loss if you don't take a look?",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.07,
+    "changed_logic": 0.36
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c3-p96",
+   "label": "ok",
+   "chinese_source": "「若是真的想報答我，就好好修煉，別辜負了這枚丹藥。」",
+   "machine_english": "\"If you really want to repay me, practice hard and don't let this elixir go.\"",
+   "edited_english": "\"If you truly wish to repay me, cultivate diligently and do not let this elixir go to waste.\"",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.35,
+    "changed_who": 0.1,
+    "changed_logic": 0.12
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c15-p18",
+   "label": "ok",
+   "chinese_source": "說著，她的身體不受控制地顫抖起來。",
+   "machine_english": "As she spoke, her body trembled uncontrollably.",
+   "edited_english": "As she spoke, her body began to tremble uncontrollably.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.49,
+    "changed_who": 0.06,
+    "changed_logic": 0.08
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c16-p85",
+   "label": "ok",
+   "chinese_source": "「我們還會再見的。」",
+   "machine_english": "\"We will meet again.\"",
+   "edited_english": "\"We will see each other again.\"",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.06,
+    "changed_who": 0.12,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c6-p19",
+   "label": "ok",
+   "chinese_source": "然而，當葉玄的目光繼續下移，看到「近期轉折」那一欄時，他的臉色瞬間陰沉了下來。",
+   "machine_english": "However, when Ye Xuan's eyes continued to move downwards and saw the \"Recent Turns\" column, his expression instantly darkened.",
+   "edited_english": "However, when Ye Xuan's gaze continued to move down and saw the \"Recent Turns\" column, his expression instantly darkened.",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.03,
+    "changed_who": 0.03,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c11-p33",
+   "label": "ok",
+   "chinese_source": "紫竹林內。",
+   "machine_english": "In the purple bamboo forest.",
+   "edited_english": "Deep in the purple bamboo forest.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.81,
+    "changed_who": 0.03,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c3-p77",
+   "label": "ok",
+   "chinese_source": "「放久了藥效還要流失，那才是真的浪費。」",
+   "machine_english": "\"If the medicine is kept for a long time, its efficacy will be lost. That would be a real waste.\"",
+   "edited_english": "\"If the medicine is kept for a long time, its efficacy will degrade. That would be a real waste.\"",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.05,
+    "changed_who": 0.03,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p169",
+   "label": "ok",
+   "chinese_source": "江靈開始撒嬌大法，搖晃著葉冉秋的手臂。",
+   "machine_english": "Jiang Ling started to act coquettishly and shook Ye Ranqiu's arm.",
+   "edited_english": "Jiang Ling began to act coquettishly, shaking Ye Ranqiu's arm.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.02,
+    "changed_who": 0.04,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c18-p27",
+   "label": "drift",
+   "chinese_source": "「既然你執意如此，那便隨你。」",
+   "machine_english": "\"Since you insist on doing so, then it's up to you.\"",
+   "edited_english": "\"Since you insist on doing so, then I will let you.\"",
+   "jev_1_13": {
+    "changed_thing": 0.06,
+    "added_claim": 0.47,
+    "changed_who": 0.74,
+    "changed_logic": 0.45
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c2-p117",
+   "label": "ok",
+   "chinese_source": "韓長青聞言，連忙擺手：",
+   "machine_english": "Hearing this, Han Changqing waved his hands quickly:",
+   "edited_english": "Hearing this, Han Changqing quickly waved his hands:",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p225",
+   "label": "ok",
+   "chinese_source": "她在瑤池仙宗，什麼樣的奇花異草沒見過？這種野草遍地都是。",
+   "machine_english": "This weed is everywhere.",
+   "edited_english": "This wild grass is everywhere.",
+   "jev_1_13": {
+    "changed_thing": 0.26,
+    "added_claim": 0.08,
+    "changed_who": 0.05,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c2-p107",
+   "label": "ok",
+   "chinese_source": "說著，葉玄從袖中摸出五塊下品靈石，放在櫃檯上推了過去。",
+   "machine_english": "With that said, Ye Xuan took out five low-grade spiritual stones from his sleeves, placed them on the counter and pushed them over.",
+   "edited_english": "Saying this, Ye Xuan took out five low-grade spiritual stones from his sleeves, placed them on the counter, and pushed them over.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.04,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c16-p17",
+   "label": "ok",
+   "chinese_source": "「好了好了，沒事了。」",
+   "machine_english": "\"Okay, okay, it's okay.\"",
+   "edited_english": "\"It's alright, it's alright, it's okay.\"",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.11,
+    "changed_who": 0.05,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c6-p78",
+   "label": "ok",
+   "chinese_source": "「不……這不可能……」",
+   "machine_english": "\"No...this is impossible...\"",
+   "edited_english": "\"No... this is impossible...\"",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.02,
+    "changed_who": 0.02,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c13-p156",
+   "label": "ok",
+   "chinese_source": "那是完全超脫了招式限制的一劍！",
+   "machine_english": "That was a sword that completely transcended the limitations of moves!",
+   "edited_english": "That was a sword strike that completely transcended the limitations of moves!",
+   "jev_1_13": {
+    "changed_thing": 0.28,
+    "added_claim": 0.17,
+    "changed_who": 0.06,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c17-p85",
+   "label": "ok",
+   "chinese_source": "這倒是個收割韭菜……哦不，發現人才的好機會。",
+   "machine_english": "This is a good opportunity to harvest leeks...oh no, to discover talents.",
+   "edited_english": "This is a good opportunity to harvest leeks...oh no, to discover talent.",
+   "jev_1_13": {
+    "changed_thing": 0.19,
+    "added_claim": 0.05,
+    "changed_who": 0.07,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p107",
+   "label": "ok",
+   "chinese_source": "少女突然湊近了幾分，鼻子皺了皺，像只小狗一樣嗅了嗅。",
+   "machine_english": "The girl suddenly moved closer, wrinkled her nose, and sniffed like a puppy.",
+   "edited_english": "The girl suddenly leaned in a bit, wrinkled her nose, and sniffed like a puppy.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.04,
+    "changed_who": 0.03,
+    "changed_logic": 0.02
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c12-p86",
+   "label": "ok",
+   "chinese_source": "那時候大家還可以說是師姐提攜師弟。",
+   "machine_english": "At that time, we could still say that the senior sister supported the junior brother.",
+   "edited_english": "Back then, people could still say that the senior sister was helping the junior brother.",
+   "jev_1_13": {
+    "changed_thing": 0.07,
+    "added_claim": 0.1,
+    "changed_who": 0.56,
+    "changed_logic": 0.31
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c19-p59",
+   "label": "ok",
+   "chinese_source": "這一幕，正好被剛來藏經閣的一群弟子看到了。",
+   "machine_english": "This scene happened to be seen by a group of disciples who had just arrived at the Sutra Pavilion.",
+   "edited_english": "This scene was seen by a group of disciples who had just arrived at the Sutra Pavilion.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.14,
+    "changed_logic": 0.71
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c9-p111",
+   "label": "ok",
+   "chinese_source": "張安弓和他的三個跟班，就像是被重錘擊中胸口，慘叫著倒飛出十幾米遠，狠狠地砸在牆壁上，狂噴鮮血。",
+   "machine_english": "Zhang An Gong and his three followers felt as if they were hit in the chest by a heavy hammer.",
+   "edited_english": "Zhang An Gong and his three followers were as if struck in the chest by a heavy hammer.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.03,
+    "changed_who": 0.19,
+    "changed_logic": 0.49
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c13-p52",
+   "label": "ok",
+   "chinese_source": "「我若退半步，便算我輸。」",
+   "machine_english": "\"If I take even half a step back, I lose.\"",
+   "edited_english": "\"If I retreat even half a step, I lose.\"",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.04,
+    "changed_who": 0.08,
+    "changed_logic": 0.1
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c21-p157",
+   "label": "ok",
+   "chinese_source": "清單上列著一堆雜七雜八的東西。",
+   "machine_english": "There was a bunch of miscellaneous stuff on the list.",
+   "edited_english": "The list contained a bunch of miscellaneous things.",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.03,
+    "changed_who": 0.08,
+    "changed_logic": 0.17
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c13-p4",
+   "label": "ok",
+   "chinese_source": "目光在林夜和葉玄之間來回遊移，神色各異。",
+   "machine_english": "His eyes wandered back and forth between Lin Ye and Ye Xuan, with different expressions.",
+   "edited_english": "His gaze shifted between Lin Ye and Ye Xuan, with varying expressions.",
+   "jev_1_13": {
+    "changed_thing": 0.06,
+    "added_claim": 0.04,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c10-p171",
+   "label": "ok",
+   "chinese_source": "敏銳的感知讓他察覺到，有一股強大的氣息正在快速靠近。",
+   "machine_english": "His keen sense allowed him to notice that a powerful aura was approaching quickly.",
+   "edited_english": "His keen perception allowed him to sense that a powerful aura was rapidly approaching.",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.04,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c9-p74",
+   "label": "ok",
+   "chinese_source": "【近期轉折：在此次霸凌中，被張安弓偷襲重傷，斷古劍被搶，道心破碎，從此淪為廢人，鬱鬱而終。】",
+   "machine_english": "From then on, he became a useless person and died in depression.]",
+   "edited_english": "From then on, he became a cripple and died in depression.]",
+   "jev_1_13": {
+    "changed_thing": 0.35,
+    "added_claim": 0.42,
+    "changed_who": 0.08,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c7-p66",
+   "label": "ok",
+   "chinese_source": "風波雖然被強行壓下，但暗流卻更加洶湧。",
+   "machine_english": "Although the storm was forcibly suppressed, the undercurrent became even more turbulent.",
+   "edited_english": "Although the uproar was forcibly suppressed, the undercurrent became even more turbulent.",
+   "jev_1_13": {
+    "changed_thing": 0.53,
+    "added_claim": 0.08,
+    "changed_who": 0.05,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c19-p108",
+   "label": "ok",
+   "chinese_source": "「葉玄此舉，雖然手段激進了些，但效果顯著。」",
+   "machine_english": "\"Ye Xuan's move is a bit radical, but the effect is remarkable.\"",
+   "edited_english": "\"Although Ye Xuan's move was somewhat radical, the effect was remarkable.\"",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.05,
+    "changed_who": 0.04,
+    "changed_logic": 0.12
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c5-p89",
+   "label": "ok",
+   "chinese_source": "「既如此，那便去吧，日後好好修煉，莫要墜了名頭。」",
+   "machine_english": "\"In that case, go ahead and practice hard in the future, and don't lose your reputation.\"",
+   "edited_english": "\"In that case, go ahead, cultivate diligently in the future, and do not tarnish your reputation.\"",
+   "jev_1_13": {
+    "changed_thing": 0.08,
+    "added_claim": 0.05,
+    "changed_who": 0.06,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c17-p150",
+   "label": "ok",
+   "chinese_source": "「如今你也突破到了固元境，按照規矩，可以晉升內門執事了。」",
+   "machine_english": "\"Now that you have broken through to the Solid Yuan Realm, according to the rules, you can be promoted to the Inner Sect Deacon.\"",
+   "edited_english": "\"Now that you have broken through to the Solid Yuan Realm, according to the rules, you can be promoted to an Inner Sect Deacon.\"",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.06,
+    "changed_who": 0.07,
+    "changed_logic": 0.11
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c19-p68",
+   "label": "ok",
+   "chinese_source": "再加上他確實在劍法上有了肉眼可見的進步，甚至在一次切磋中擊敗了以前打不過的對手。",
+   "machine_english": "In addition, he has indeed made visible progress in his swordsmanship, and even defeated an opponent he could not beat before in a sparring match.",
+   "edited_english": "Moreover, he had indeed made visible progress in his swordsmanship, even defeating an opponent he could not beat before in a sparring match.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.05,
+    "changed_who": 0.05,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c7-p53",
+   "label": "ok",
+   "chinese_source": "所有人都以為，抓回一個小小的叛徒，不過是手到擒來。",
+   "machine_english": "Everyone thought that catching a little traitor was just easy.",
+   "edited_english": "Everyone thought that capturing a mere traitor would be a piece of cake.",
+   "jev_1_13": {
+    "changed_thing": 0.06,
+    "added_claim": 0.08,
+    "changed_who": 0.03,
+    "changed_logic": 0.25
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c3-p27",
+   "label": "ok",
+   "chinese_source": "魚兒上鉤了。",
+   "machine_english": "The fish is hooked.",
+   "edited_english": "The fish has taken the bait.",
+   "jev_1_13": {
+    "changed_thing": 0.24,
+    "added_claim": 0.76,
+    "changed_who": 0.6,
+    "changed_logic": 0.11
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p267",
+   "label": "ok",
+   "chinese_source": "葉玄嘴角微勾。",
+   "machine_english": "Ye Xuan's lips curled up slightly.",
+   "edited_english": "Ye Xuan's lips curled slightly.",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.03,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c9-p75",
+   "label": "ok",
+   "chinese_source": "【當前需求：救下他，保住斷古劍。】",
+   "machine_english": "[Current demand: Save him and keep the Broken Ancient Sword.]",
+   "edited_english": "[Current need: Save him and keep the Broken Ancient Sword.]",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.04,
+    "changed_who": 0.1,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p87",
+   "label": "ok",
+   "chinese_source": "葉玄坦然收下。",
+   "machine_english": "Ye Xuan accepted it calmly.",
+   "edited_english": "Ye Xuan calmly accepted it.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.02,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c13-p150",
+   "label": "ok",
+   "chinese_source": "馬元和楊開復更是像見了鬼一樣，滿臉的不可思議。",
+   "machine_english": "Ma Yuan and Yang Kaifu looked as if they had seen a ghost, with expressions of disbelief on their faces.",
+   "edited_english": "Ma Yuan and Yang Kaifu looked as if they had seen a ghost, their faces filled with disbelief.",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.03,
+    "changed_who": 0.05,
+    "changed_logic": 0.09
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c20-p268",
+   "label": "ok",
+   "chinese_source": "「這一個月，我雖然在睡覺，但也知道你在做什麼。」",
+   "machine_english": "\"This month, even though I have been sleeping, I know what you are doing.\"",
+   "edited_english": "\"This month, even though I've been sleeping, I know what you've been doing.\"",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.12,
+    "changed_who": 0.1,
+    "changed_logic": 0.1
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c10-p87",
+   "label": "ok",
+   "chinese_source": "而且，還是被一位高高在上的長老叫出來。",
+   "machine_english": "Moreover, he was called out by a superior elder.",
+   "edited_english": "Moreover, he was called out by a high-ranking elder.",
+   "jev_1_13": {
+    "changed_thing": 0.08,
+    "added_claim": 0.09,
+    "changed_who": 0.06,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c18-p84",
+   "label": "ok",
+   "chinese_source": "其中有一條：玄階以上功法為孤本，概不外借，弟子需在閣內研讀，或由長老代為抄錄副本，副本需用特製筆墨，字跡一小時後自動消失。",
+   "machine_english": "Disciples need to study them in the pavilion, or have elders make copies on their behalf.",
+   "edited_english": "Disciples must study them in the pavilion, or have elders transcribe copies for them.",
+   "jev_1_13": {
+    "changed_thing": 0.07,
+    "added_claim": 0.05,
+    "changed_who": 0.15,
+    "changed_logic": 0.34
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c12-p160",
+   "label": "ok",
+   "chinese_source": "他的聲音不大，卻透著一股讓人頭皮發麻的寒意。",
+   "machine_english": "His voice was not loud, but there was a chill that made people's scalp numb.",
+   "edited_english": "His voice was not loud, but it carried a chill that made people's scalp numb.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.04,
+    "changed_who": 0.44,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c9-p13",
+   "label": "ok",
+   "chinese_source": "他僅剩的左手，緊緊抱著一把鏽跡斑斑的鐵劍。",
+   "machine_english": "His remaining left hand was holding a rusty iron sword tightly.",
+   "edited_english": "His remaining left hand tightly held a rusty iron sword.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c15-p106",
+   "label": "ok",
+   "chinese_source": "「然後運轉靈力，走三個大周天。」",
+   "machine_english": "\"Then circulate your spiritual power and walk three great circles.\"",
+   "edited_english": "\"Then circulate your spiritual energy and walk three great circulations.\"",
+   "jev_1_13": {
+    "changed_thing": 0.4,
+    "added_claim": 0.08,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c3-p2",
+   "label": "ok",
+   "chinese_source": "葉玄負手而立，目光如炬，直視韓長青的雙眼。",
+   "machine_english": "Ye Xuan stood with his hands behind his back, his eyes like torches, looking directly into Han Changqing's eyes.",
+   "edited_english": "Ye Xuan stood with his hands behind his back, his gaze sharp, looking directly into Han Changqing's eyes.",
+   "jev_1_13": {
+    "changed_thing": 0.34,
+    "added_claim": 0.07,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p50",
+   "label": "ok",
+   "chinese_source": "「切磋較技，輸贏乃是常事。」",
+   "machine_english": "\"Winning and losing are commonplace when competing against each other.\"",
+   "edited_english": "\"Exchanging skills, winning and losing are common matters.\"",
+   "jev_1_13": {
+    "changed_thing": 0.17,
+    "added_claim": 0.1,
+    "changed_who": 0.2,
+    "changed_logic": 0.12
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c5-p46",
+   "label": "ok",
+   "chinese_source": "雖然藍色氣運已經算是百里挑一的天才，放在往日，葉玄或許就出手了。",
+   "machine_english": "Although Blue Qi Luck is already considered one of the best geniuses, in the past, Ye Xuan might have taken action.",
+   "edited_english": "Although Blue Qi Luck is already considered one of the top geniuses, in the past, Ye Xuan might have taken action.",
+   "jev_1_13": {
+    "changed_thing": 0.06,
+    "added_claim": 0.04,
+    "changed_who": 0.03,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c18-p185",
+   "label": "ok",
+   "chinese_source": "「我抄！」",
+   "machine_english": "\"I'll copy it!\"",
+   "edited_english": "\"I'll copy!\"",
+   "jev_1_13": {
+    "changed_thing": 0.09,
+    "added_claim": 0.04,
+    "changed_who": 0.09,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c10-p83",
+   "label": "ok",
+   "chinese_source": "他在內門，是個沒有名字的透明人。",
+   "machine_english": "He is a transparent person without a name in the inner sect.",
+   "edited_english": "He is a nameless, transparent figure in the inner sect.",
+   "jev_1_13": {
+    "changed_thing": 0.1,
+    "added_claim": 0.05,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c5-p2",
+   "label": "ok",
+   "chinese_source": "藏經閣那厚重的朱漆大門，在沉悶的摩擦聲中緩緩開啟。",
+   "machine_english": "The heavy vermilion-lacquered door of the Sutra Pavilion slowly opened with a dull friction sound.",
+   "edited_english": "The heavy vermilion-lacquered door of the Sutra Pavilion slowly opened with a dull grinding sound.",
+   "jev_1_13": {
+    "changed_thing": 0.08,
+    "added_claim": 0.19,
+    "changed_who": 0.02,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c21-p194",
+   "label": "ok",
+   "chinese_source": "「這……」",
+   "machine_english": "\"This……\"",
+   "edited_english": "\"This...\"",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.02,
+    "changed_who": 0.02,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c13-p127",
+   "label": "ok",
+   "chinese_source": "隨後，一切歸於平靜。",
+   "machine_english": "Then everything calmed down.",
+   "edited_english": "Then everything settled.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.06,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c12-p64",
+   "label": "ok",
+   "chinese_source": "王天等人更是目瞪口呆。",
+   "machine_english": "Wang Tian and others were even more stunned.",
+   "edited_english": "Wang Tian and others were even more dumbfounded.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.04,
+    "changed_who": 0.02,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c2-p41",
+   "label": "ok",
+   "chinese_source": "結果令人沮喪。",
+   "machine_english": "The results are discouraging.",
+   "edited_english": "The results were discouraging.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.1,
+    "changed_who": 0.04,
+    "changed_logic": 0.11
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c17-p40",
+   "label": "ok",
+   "chinese_source": "葉玄對此一無所知。",
+   "machine_english": "Ye Xuan knew nothing about this.",
+   "edited_english": "Ye Xuan was unaware of this.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.04,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c3-p15",
+   "label": "ok",
+   "chinese_source": "最近這種發作的頻率越來越高，痛楚也越來越劇烈。",
+   "machine_english": "Recently these attacks have become more frequent and the pain has become more severe.",
+   "edited_english": "Recently, the frequency of these attacks has been increasing, and the pain has become more severe.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.03,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c19-p16",
+   "label": "ok",
+   "chinese_source": "更重要的是……",
+   "machine_english": "What's more important is...",
+   "edited_english": "More importantly...",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.03,
+    "changed_who": 0.07,
+    "changed_logic": 0.5
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p207",
+   "label": "unsure",
+   "chinese_source": "這根大腿，必須抱緊了！",
+   "machine_english": "This thigh must be hugged tightly!",
+   "edited_english": "I must hold onto this asset tightly!",
+   "jev_1_13": {
+    "changed_thing": 0.8,
+    "added_claim": 0.58,
+    "changed_who": 0.65,
+    "changed_logic": 0.1
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p260",
+   "label": "ok",
+   "chinese_source": "但他依然面不改色，笑著收了起來。",
+   "machine_english": "But he remained calm and put it away with a smile.",
+   "edited_english": "But he still remained unfazed and put it away with a smile.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.05,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c19-p95",
+   "label": "ok",
+   "chinese_source": "「那個葉玄在藏經閣肆意妄為，強迫弟子抄書，還動用私刑體罰！」",
+   "machine_english": "\"That Ye Xuan acted wantonly in the Sutra Pavilion, forcing his disciples to copy books, and even using lynching and corporal punishment!\"",
+   "edited_english": "\"That Ye Xuan acted wantonly in the Sutra Pavilion, forcing his disciples to copy books, and even using private punishment and corporal punishment!\"",
+   "jev_1_13": {
+    "changed_thing": 0.49,
+    "added_claim": 0.14,
+    "changed_who": 0.12,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c20-p61",
+   "label": "ok",
+   "chinese_source": "但他並沒有想過要搞什麼山頭主義，或者顛覆宗門。",
+   "machine_english": "But he never thought about engaging in mountain-top doctrine or subverting the sect.",
+   "edited_english": "But he never thought about engaging in factionalism or subverting the sect.",
+   "jev_1_13": {
+    "changed_thing": 0.54,
+    "added_claim": 0.15,
+    "changed_who": 0.04,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c9-p110",
+   "label": "ok",
+   "chinese_source": "那懸停的毒鏢瞬間化為粉末。",
+   "machine_english": "The hovering poison dart instantly turned into powder.",
+   "edited_english": "The hovering poison dart instantly disintegrated into powder.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.06,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c10-p79",
+   "label": "ok",
+   "chinese_source": "齊木春猛地抬頭，瞳孔劇烈收縮。",
+   "machine_english": "Qi Muchun raised his head suddenly, his pupils contracting violently.",
+   "edited_english": "Qi Muchun suddenly raised his head, his pupils contracting violently.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.02,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c17-p137",
+   "label": "ok",
+   "chinese_source": "他毫不客氣地放出先天境的神識，將葉玄里里外外掃了個遍。",
+   "machine_english": "He unceremoniously released his innate realm consciousness and scanned Ye Xuan inside and out.",
+   "edited_english": "He unceremoniously released his innate realm divine sense and scanned Ye Xuan inside and out.",
+   "jev_1_13": {
+    "changed_thing": 0.26,
+    "added_claim": 0.1,
+    "changed_who": 0.03,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c10-p117",
+   "label": "ok",
+   "chinese_source": "良久。",
+   "machine_english": "a long time.",
+   "edited_english": "for a long time.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.08,
+    "changed_who": 0.09,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c15-p57",
+   "label": "ok",
+   "chinese_source": "她從來沒跟任何人說過那種被「占據」的感覺，因為太過恐怖，她甚至不敢回想。",
+   "machine_english": "She had never told anyone about the feeling of being \"occupied\" because it was so terrifying that she didn't even dare to think about it.",
+   "edited_english": "She had never told anyone about the feeling of being \"occupied\" because it was so terrifying that she didn't even dare to recall it.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.04,
+    "changed_who": 0.06,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c13-p158",
+   "label": "ok",
+   "chinese_source": "只有劍道宗師才能施展出的「無招勝有招」！",
+   "machine_english": "Only a master of swordsmanship can use \"no move to win, but one move to win\"!",
+   "edited_english": "Only a master of swordsmanship can execute \"no move to win, but one move to win\"!",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.04,
+    "changed_who": 0.04,
+    "changed_logic": 0.09
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c15-p14",
+   "label": "ok",
+   "chinese_source": "江靈抬起頭，眼眶微紅，那雙大眼睛裡竟然蓄滿了淚水。",
+   "machine_english": "Jiang Ling raised his head, his eyes were slightly red, and his big eyes were filled with tears.",
+   "edited_english": "Jiang Ling raised his head, his eyes were slightly red, and his large eyes were filled with tears.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.03,
+    "changed_who": 0.02,
+    "changed_logic": 0.08
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c19-p114",
+   "label": "ok",
+   "chinese_source": "趙長鶴看著王天離去的背影，冷哼一聲。",
+   "machine_english": "Zhao Changhe looked at Wang Tian's leaving figure and snorted coldly.",
+   "edited_english": "Zhao Changhe looked at Wang Tian's retreating figure and snorted coldly.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.04,
+    "changed_who": 0.03,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c13-p14",
+   "label": "ok",
+   "chinese_source": "「葉師弟他……他不過是個凝脈期，而且多年未動武。」",
+   "machine_english": "\"Junior Brother Ye...he is only in the pulse condensation stage, and he has not used force for many years.\"",
+   "edited_english": "\"Junior Brother Ye...he is only in the pulse condensation stage, and he hasn't used martial arts for many years.\"",
+   "jev_1_13": {
+    "changed_thing": 0.12,
+    "added_claim": 0.1,
+    "changed_who": 0.04,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c2-p133",
+   "label": "ok",
+   "chinese_source": "韓長青下意識地想要縮回手，卻被葉玄一股柔和卻不可抗拒的力量按住。",
+   "machine_english": "Han Changqing subconsciously wanted to retract his hand, but was held down by Ye Xuan's gentle but irresistible force.",
+   "edited_english": "Han Changqing subconsciously wanted to pull back his hand, but was held down by Ye Xuan's gentle yet irresistible force.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.02,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c20-p138",
+   "label": "ok",
+   "chinese_source": "外面早已排起了長龍。",
+   "machine_english": "There was already a long queue outside.",
+   "edited_english": "A long queue had already formed outside.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.06,
+    "changed_who": 0.11,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c3-p65",
+   "label": "ok",
+   "chinese_source": "韓長青瞳孔地震，說話都結巴了。",
+   "machine_english": "Han Changqing's pupils were shaking and he stuttered when speaking.",
+   "edited_english": "Han Changqing's pupils trembled, and he stuttered when speaking.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.03,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c21-p233",
+   "label": "ok",
+   "chinese_source": "弟子的眼睛頓時亮了。",
+   "machine_english": "The disciple's eyes suddenly lit up.",
+   "edited_english": "The disciple's eyes suddenly brightened.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.04,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c8-p52",
+   "label": "ok",
+   "chinese_source": "「行。」",
+   "machine_english": "\"OK.\"",
+   "edited_english": "\"Alright.\"",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.04,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c13-p84",
+   "label": "drift",
+   "chinese_source": "反觀葉玄。",
+   "machine_english": "On the other hand, look at Ye Xuan.",
+   "edited_english": "In contrast, Ye Xuan had nothing.",
+   "jev_1_13": {
+    "changed_thing": 0.07,
+    "added_claim": 0.88,
+    "changed_who": 0.59,
+    "changed_logic": 0.19
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c17-p141",
+   "label": "ok",
+   "chinese_source": "「奇怪……」",
+   "machine_english": "\"strangeness……\"",
+   "edited_english": "\"Strange...\"",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.03,
+    "changed_who": 0.08,
+    "changed_logic": 0.27
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c17-p27",
+   "label": "ok",
+   "chinese_source": "「不過，能有如此聲勢，定是厚積薄發之輩。」",
+   "machine_english": "\"However, to be able to have such a momentum, he must be someone who has accumulated a lot of experience.\"",
+   "edited_english": "\"However, to have such momentum, he must be someone who has accumulated a lot.\"",
+   "jev_1_13": {
+    "changed_thing": 0.14,
+    "added_claim": 0.09,
+    "changed_who": 0.04,
+    "changed_logic": 0.09
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c2-p123",
+   "label": "ok",
+   "chinese_source": "葉玄看著他，心中卻是暗笑。",
+   "machine_english": "Ye Xuan looked at him, but smiled secretly in his heart.",
+   "edited_english": "Ye Xuan looked at him, a secret smile playing on his lips.",
+   "jev_1_13": {
+    "changed_thing": 0.16,
+    "added_claim": 0.55,
+    "changed_who": 0.14,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c2-p111",
+   "label": "ok",
+   "chinese_source": "更何況，葉長老向來以「只進不出」聞名。",
+   "machine_english": "What's more, Elder Ye has always been famous for \"only entering but not exiting\".",
+   "edited_english": "Moreover, Elder Ye has always been known for \"only taking in and never giving out.\"",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.05,
+    "changed_who": 0.06,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c18-p90",
+   "label": "ok",
+   "chinese_source": "他淡淡地開口。",
+   "machine_english": "He spoke calmly.",
+   "edited_english": "He said calmly.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.05,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c17-p158",
+   "label": "ok",
+   "chinese_source": "葉玄只是思索了片刻，便抬起頭，一臉認真地說道：",
+   "machine_english": "Ye Xuan thought for a moment, then raised his head and said seriously.",
+   "edited_english": "Ye Xuan pondered for a moment, then raised his head and said seriously.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.03,
+    "changed_who": 0.03,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c9-p100",
+   "label": "ok",
+   "chinese_source": "很輕，但在這一片死寂中，卻如同驚雷。",
+   "machine_english": "It was very light, but in this dead silence, it was like thunder.",
+   "edited_english": "It was very light, but in this dead silence, it was like a clap of thunder.",
+   "jev_1_13": {
+    "changed_thing": 0.09,
+    "added_claim": 0.28,
+    "changed_who": 0.02,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c16-p117",
+   "label": "ok",
+   "chinese_source": "一股龐大到無法形容的靈力，如同長江大河般灌入他的體內。",
+   "machine_english": "An indescribably huge amount of spiritual power poured into his body like the Yangtze River.",
+   "edited_english": "A vast, indescribable amount of spiritual power poured into his body like the Yangtze River.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.05,
+    "changed_who": 0.02,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c15-p8",
+   "label": "ok",
+   "chinese_source": "她低著頭，手指無意識地絞著衣角，原本活潑可愛的小臉上，此刻卻寫滿了落寞和恐懼。",
+   "machine_english": "She lowered her head and twisted her clothes unconsciously with her fingers.",
+   "edited_english": "She lowered her head, her fingers unconsciously twisting the corner of her clothes.",
+   "jev_1_13": {
+    "changed_thing": 0.11,
+    "added_claim": 0.08,
+    "changed_who": 0.07,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c17-p88",
+   "label": "ok",
+   "chinese_source": "李二狗千恩萬謝地走了。",
+   "machine_english": "Li Ergou left with great gratitude.",
+   "edited_english": "Li Ergou left with thanks.",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.04,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c20-p77",
+   "label": "ok",
+   "chinese_source": "一陣極輕的腳步聲，突然從樓梯口傳來。",
+   "machine_english": "A burst of very light footsteps suddenly came from the stairs.",
+   "edited_english": "A very light sound of footsteps suddenly came from the stairs.",
+   "jev_1_13": {
+    "changed_thing": 0.21,
+    "added_claim": 0.07,
+    "changed_who": 0.07,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c12-p148",
+   "label": "ok",
+   "chinese_source": "找死嗎？",
+   "machine_english": "Looking for death?",
+   "edited_english": "Are you looking for death?",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.09,
+    "changed_who": 0.31,
+    "changed_logic": 0.53
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c8-p102",
+   "label": "ok",
+   "chinese_source": "有大魚！",
+   "machine_english": "There are big fish!",
+   "edited_english": "There is a big fish!",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.12,
+    "changed_who": 0.07,
+    "changed_logic": 0.09
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c18-p43",
+   "label": "ok",
+   "chinese_source": "蠢？",
+   "machine_english": "stupid?",
+   "edited_english": "foolish?",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.04,
+    "changed_who": 0.03,
+    "changed_logic": 0.08
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c11-p76",
+   "label": "ok",
+   "chinese_source": "當年在外門時，他是個沉默寡言、被人欺負都不敢吭聲的受氣包。",
+   "machine_english": "When he was in the outer sect, he was a silent person who dared not say a word when being bullied.",
+   "edited_english": "When he was in the outer sect, he was a taciturn person who dared not speak up when being bullied.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.04,
+    "changed_who": 0.07,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c21-p15",
+   "label": "ok",
+   "chinese_source": "拘魂塔！",
+   "machine_english": "Soul-binding tower!",
+   "edited_english": "Soul-binding Tower!",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.05,
+    "changed_who": 0.03,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c17-p42",
+   "label": "ok",
+   "chinese_source": "百年修為灌頂，毫無副作用，根基紮實無比。",
+   "machine_english": "A hundred years of cultivation empowerment, no side effects, and a solid foundation.",
+   "edited_english": "A hundred years of cultivation empowerment, with no side effects and an incredibly solid foundation.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.06,
+    "changed_who": 0.03,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c10-p102",
+   "label": "ok",
+   "chinese_source": "葉玄心中狂喜，但他臉上卻不動聲色。",
+   "machine_english": "Ye Xuan was ecstatic in his heart, but his face remained calm.",
+   "edited_english": "Ye Xuan was ecstatic in his heart, but his expression remained impassive.",
+   "jev_1_13": {
+    "changed_thing": 0.13,
+    "added_claim": 0.09,
+    "changed_who": 0.04,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c1-p87",
+   "label": "ok",
+   "chinese_source": "嘶——",
+   "machine_english": "hiss--",
+   "edited_english": "Hiss--",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.04,
+    "changed_who": 0.04,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c21-p220",
+   "label": "ok",
+   "chinese_source": "葉玄因為昨晚奔波了一夜，實在太困了。",
+   "machine_english": "Ye Xuan was too sleepy because he had been running around all night last night.",
+   "edited_english": "Ye Xuan was too sleepy because he had been running around all night.",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.05,
+    "changed_who": 0.05,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c13-p39",
+   "label": "ok",
+   "chinese_source": "「罷了。」",
+   "machine_english": "\"That's all.\"",
+   "edited_english": "\"Enough.\"",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.11,
+    "changed_who": 0.19,
+    "changed_logic": 0.09
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c10-p143",
+   "label": "ok",
+   "chinese_source": "緊接著，他的身體再次發生蛻變。",
+   "machine_english": "Immediately afterwards, his body transformed again.",
+   "edited_english": "Immediately afterward, his body underwent another transformation.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.05,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c5-p58",
+   "label": "ok",
+   "chinese_source": "一道清脆如黃鸝般的聲音，從門口傳來。",
+   "machine_english": "A voice as crisp as an oriole came from the door.",
+   "edited_english": "A voice as crisp as a yellow oriole came from the door.",
+   "jev_1_13": {
+    "changed_thing": 0.15,
+    "added_claim": 0.5,
+    "changed_who": 0.02,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c15-p112",
+   "label": "ok",
+   "chinese_source": "隨著月光的「引入」，她那緊繃的小臉，竟然奇蹟般地放鬆了下來。",
+   "machine_english": "With the \"introduction\" of moonlight, her tight little face miraculously relaxed.",
+   "edited_english": "With the \"introduction\" of moonlight, her tense little face miraculously relaxed.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.04,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c4-p29",
+   "label": "ok",
+   "chinese_source": "他僅僅是投資了一枚三品的三陽丹啊！",
+   "machine_english": "He just invested in a third-grade Sanyang Pill!",
+   "edited_english": "He only invested in a third-grade Sanyang Pill!",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.04,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c13-p146",
+   "label": "ok",
+   "chinese_source": "而且是被一劍擊敗？",
+   "machine_english": "And was he defeated with a sword?",
+   "edited_english": "And was he defeated by a sword?",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.04,
+    "changed_who": 0.12,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c2-p100",
+   "label": "ok",
+   "chinese_source": "葉玄故作驚訝地問道。",
+   "machine_english": "Ye Xuan asked pretending to be surprised.",
+   "edited_english": "Ye Xuan asked, feigning surprise.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.05,
+    "changed_logic": 0.08
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c6-p121",
+   "label": "ok",
+   "chinese_source": "雖然回報不如韓長青那般驚人，但勝在細水長流。",
+   "machine_english": "Although the rewards are not as amazing as Han Changqing's, they are better than the steady stream of water.",
+   "edited_english": "Although the rewards are not as astonishing as Han Changqing's, they are better than a steady stream.",
+   "jev_1_13": {
+    "changed_thing": 0.27,
+    "added_claim": 0.06,
+    "changed_who": 0.06,
+    "changed_logic": 0.08
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c19-p31",
+   "label": "ok",
+   "chinese_source": "以前他只顧著模仿招式，卻忽略了劍意的流轉。",
+   "machine_english": "In the past, he only focused on imitating moves, but ignored the flow of sword intent.",
+   "edited_english": "Previously, he only focused on imitating the moves, but ignored the flow of sword intent.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.02,
+    "changed_who": 0.02,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c9-p11",
+   "label": "ok",
+   "chinese_source": "他面容消瘦，神情卻異常平靜，平靜得就像是一潭死水。",
+   "machine_english": "His face was thin, but his expression was unusually calm, as calm as a pool of stagnant water.",
+   "edited_english": "His face was gaunt, but his expression was unusually calm, as calm as a pool of stagnant water.",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.04,
+    "changed_who": 0.02,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c4-p67",
+   "label": "ok",
+   "chinese_source": "葉玄眼中的精光，再也掩飾不住。",
+   "machine_english": "The glint in Ye Xuan's eyes could no longer be concealed.",
+   "edited_english": "The sharp glint in Ye Xuan's eyes could no longer be concealed.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.46,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c18-p117",
+   "label": "ok",
+   "chinese_source": "陳飛宇怒極反笑，指著葉玄的鼻子罵道。",
+   "machine_english": "Chen Feiyu laughed angrily, pointed at Ye Xuan's nose and cursed.",
+   "edited_english": "Chen Feiyu laughed in anger, pointing at Ye Xuan's nose and cursing.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.03,
+    "changed_who": 0.07,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c7-p65",
+   "label": "ok",
+   "chinese_source": "宗門高層立刻下達了封口令，嚴禁任何人再議論此事，違者逐出師門。",
+   "machine_english": "The senior leaders of the sect immediately issued a hush-hush order, strictly prohibiting anyone from discussing the matter any more, and any violators would be expelled from the sect.",
+   "edited_english": "The senior leaders of the sect immediately issued a gag order, strictly prohibiting anyone from discussing the matter further, and violators would be expelled from the sect.",
+   "jev_1_13": {
+    "changed_thing": 0.25,
+    "added_claim": 0.09,
+    "changed_who": 0.05,
+    "changed_logic": 0.15
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c11-p111",
+   "label": "ok",
+   "chinese_source": "一聲清越激昂的劍鳴，突然從天邊傳來。",
+   "machine_english": "A clear and exciting sword cry suddenly came from the horizon.",
+   "edited_english": "A clear and rousing sword cry suddenly came from the horizon.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.05,
+    "changed_who": 0.03,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c11-p90",
+   "label": "ok",
+   "chinese_source": "那是肖謨和史喬。",
+   "machine_english": "That's Xiao Mo and Shi Qiao.",
+   "edited_english": "Those are Xiao Mo and Shi Qiao.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.05,
+    "changed_who": 0.04,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c21-p135",
+   "label": "ok",
+   "chinese_source": "葉玄也不廢話，直接開門見山。",
+   "machine_english": "Ye Xuan didn't waste any time and went straight to the point.",
+   "edited_english": "Ye Xuan didn't waste any time and got straight to the point.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.03,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c20-p252",
+   "label": "ok",
+   "chinese_source": "「你卡住了。」",
+   "machine_english": "\"You're stuck.\"",
+   "edited_english": "\"You are stuck.\"",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.02,
+    "changed_who": 0.03,
+    "changed_logic": 0.09
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c3-p24",
+   "label": "ok",
+   "chinese_source": "葉玄連忙伸手將他扶起。",
+   "machine_english": "Ye Xuan quickly stretched out his hand to help him up.",
+   "edited_english": "Ye Xuan quickly reached out his hand to help him up.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.03,
+    "changed_who": 0.03,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c5-p52",
+   "label": "ok",
+   "chinese_source": "弟子們三三兩兩地離去，偌大的空間顯得有些空曠。",
+   "machine_english": "The disciples left in twos and threes, and the huge space seemed a bit empty.",
+   "edited_english": "The disciples left in small groups, and the vast space seemed somewhat empty.",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.07,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c12-p4",
+   "label": "ok",
+   "chinese_source": "「咱們同期里，竟然有人突破到了靈海境？！」",
+   "machine_english": "\"During our same period, someone actually broke through to the spiritual sea realm?!\"",
+   "edited_english": "\"Among our peers, someone actually broke through to the Spiritual Sea Realm?!\"",
+   "jev_1_13": {
+    "changed_thing": 0.06,
+    "added_claim": 0.05,
+    "changed_who": 0.05,
+    "changed_logic": 0.08
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p174",
+   "label": "drift",
+   "chinese_source": "「雖然外門簡陋，但勝在清靜。」",
+   "machine_english": "\"Although the outer gate is simple, it is more peaceful than anything else.\"",
+   "edited_english": "\"Although the outer courtyard is simple, it is more peaceful.\"",
+   "jev_1_13": {
+    "changed_thing": 0.91,
+    "added_claim": 0.47,
+    "changed_who": 0.07,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c8-p74",
+   "label": "ok",
+   "chinese_source": "「這才像話嘛。」",
+   "machine_english": "\"This is so true.\"",
+   "edited_english": "\"This is what it should be.\"",
+   "jev_1_13": {
+    "changed_thing": 0.07,
+    "added_claim": 0.11,
+    "changed_who": 0.26,
+    "changed_logic": 0.18
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c21-p2",
+   "label": "ok",
+   "chinese_source": "【記住本站域名 追台灣小說就去台灣小說網，𝓽𝔀𝓴𝓪𝓷.𝓬𝓸𝓶超貼心 】",
+   "machine_english": "[Remember the domain name of this website and go there to pursue Taiwanese novels.]",
+   "edited_english": "Remember the domain name of this website and go to Taiwan Novel Network to pursue Taiwanese novels.",
+   "jev_1_13": {
+    "changed_thing": 0.42,
+    "added_claim": 0.32,
+    "changed_who": 0.12,
+    "changed_logic": 0.07
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c4-p94",
+   "label": "ok",
+   "chinese_source": "葉玄清晰地感覺到，那些因為年老體衰而逐漸枯萎的經脈，在藥力的滋潤下，重新煥發了生機。",
+   "machine_english": "Ye Xuan clearly felt that the meridians that had gradually withered due to old age and physical weakness were revitalized by the nourishment of the medicine.",
+   "edited_english": "Ye Xuan clearly felt that the meridians that had gradually withered due to old age and physical decline were revitalized by the nourishment of the medicine.",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.04,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c20-p65",
+   "label": "ok",
+   "chinese_source": "系統提示過，這傢伙心魔深重，遲早會來報復。",
+   "machine_english": "The system reminded me that this guy has a lot of inner demons and will come to take revenge sooner or later.",
+   "edited_english": "The system warned me that this guy has deep inner demons and will come to take revenge sooner or later.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.05,
+    "changed_who": 0.09,
+    "changed_logic": 0.09
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c12-p95",
+   "label": "ok",
+   "chinese_source": "暗示葉玄自慚形穢，不敢來這種高端場合。",
+   "machine_english": "It is implied that Ye Xuan is ashamed and does not dare to come to such a high-end occasion.",
+   "edited_english": "It is implied that Ye Xuan is self-conscious and does not dare to come to such a high-end occasion.",
+   "jev_1_13": {
+    "changed_thing": 0.06,
+    "added_claim": 0.1,
+    "changed_who": 0.05,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c20-p236",
+   "label": "ok",
+   "chinese_source": "在這種資源堆積下。",
+   "machine_english": "With this accumulation of resources.",
+   "edited_english": "With such an accumulation of resources.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.06,
+    "changed_who": 0.03,
+    "changed_logic": 0.09
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p175",
+   "label": "ok",
+   "chinese_source": "「而且我那裡有些古籍孤本，或許小靈兒會感興趣。」",
+   "machine_english": "\"And I have some unique ancient books there, maybe Xiao Ling'er will be interested in them.\"",
+   "edited_english": "\"And I have some rare ancient books there, perhaps Xiao Ling'er will be interested in them.\"",
+   "jev_1_13": {
+    "changed_thing": 0.07,
+    "added_claim": 0.04,
+    "changed_who": 0.03,
+    "changed_logic": 0.09
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c8-p76",
+   "label": "drift",
+   "chinese_source": "內門果然是凌雲宗的底蘊所在，這裡的韭菜質量，明顯高了一個檔次。",
+   "machine_english": "The inner gate is indeed the core of Lingyun Sect, and the quality of the leeks here is obviously a higher level.",
+   "edited_english": "The inner sect is indeed the foundation of Lingyun Sect, and the quality of the disciples here is clearly on a higher level.",
+   "jev_1_13": {
+    "changed_thing": 0.93,
+    "added_claim": 0.51,
+    "changed_who": 0.17,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c18-p6",
+   "label": "ok",
+   "chinese_source": "這一天下來，哪還有時間修煉？",
+   "machine_english": "At the end of the day, how can I still have time to practice?",
+   "edited_english": "After all this, how can I still have time to cultivate?",
+   "jev_1_13": {
+    "changed_thing": 0.1,
+    "added_claim": 0.15,
+    "changed_who": 0.16,
+    "changed_logic": 0.1
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c12-p43",
+   "label": "ok",
+   "chinese_source": "前一秒還在天邊，下一秒就已經停在了涼亭前。",
+   "machine_english": "One second it was on the horizon, and the next second it was stopped in front of the pavilion.",
+   "edited_english": "One second it was on the horizon, and the next second it had stopped in front of the pavilion.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.04,
+    "changed_who": 0.05,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c10-p155",
+   "label": "ok",
+   "chinese_source": "無數道細小的劍氣以葉玄為中心，向四周擴散。",
+   "machine_english": "Countless small rays of sword energy spread to all directions with Ye Xuan as the center.",
+   "edited_english": "Countless fine rays of sword energy spread in all directions with Ye Xuan at the center.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.03,
+    "changed_who": 0.03,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c17-p93",
+   "label": "ok",
+   "chinese_source": "「哦？什麼大事？」",
+   "machine_english": "\"Oh? What's the big deal?\"",
+   "edited_english": "\"Oh? What big deal?\"",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.03,
+    "changed_who": 0.03,
+    "changed_logic": 0.16
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c21-p3",
+   "label": "ok",
+   "chinese_source": "葉玄的心臟猛地跳了一下。",
+   "machine_english": "Ye Xuan's heart skipped a beat.",
+   "edited_english": "Ye Xuan's heart suddenly leaped.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.11,
+    "changed_who": 0.06,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c11-p59",
+   "label": "ok",
+   "chinese_source": "此時的他，臉上堆滿了諂媚的笑容，正圍著一個身穿錦袍、大腹便便的中年胖子轉悠。",
+   "machine_english": "At this time, he had a flattering smile on his face and was wandering around a fat middle-aged man wearing a brocade robe with a big belly.",
+   "edited_english": "At this time, his face was covered in a flattering smile as he circled a fat middle-aged man wearing a brocade robe.",
+   "jev_1_13": {
+    "changed_thing": 0.09,
+    "added_claim": 0.04,
+    "changed_who": 0.07,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c7-p14",
+   "label": "ok",
+   "chinese_source": "這種非人的折磨足足持續了一炷香的時間。",
+   "machine_english": "This inhuman torture lasted as long as a stick of incense.",
+   "edited_english": "This inhuman torture lasted for the duration of an incense stick.",
+   "jev_1_13": {
+    "changed_thing": 0.06,
+    "added_claim": 0.03,
+    "changed_who": 0.02,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c4-p148",
+   "label": "ok",
+   "chinese_source": "那已經是過去式了。",
+   "machine_english": "That's a thing of the past.",
+   "edited_english": "That has become a thing of the past.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.17,
+    "changed_who": 0.05,
+    "changed_logic": 0.1
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c3-p32",
+   "label": "ok",
+   "chinese_source": "是啊。",
+   "machine_english": "yes.",
+   "edited_english": "Yes.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.02,
+    "changed_who": 0.02,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c5-p78",
+   "label": "ok",
+   "chinese_source": "陸雪鳶輕聲說道，眼中流露出一絲不舍。",
+   "machine_english": "Lu Xueyuan said softly, with a trace of reluctance in her eyes.",
+   "edited_english": "Lu Xueyuan said softly, a trace of reluctance in her eyes.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.02,
+    "changed_who": 0.06,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c7-p18",
+   "label": "ok",
+   "chinese_source": "原本那雙雖修長卻布滿細紋、略顯蒼老的手，此刻竟變得白嫩細膩，如同上好的羊脂白玉。",
+   "machine_english": "The hands that were originally slender but covered with fine lines and looked a little old now became white, tender and delicate, like the finest mutton-fat white jade.",
+   "edited_english": "The hands that were originally slender but covered with fine lines and looked a little old now became white, tender, and delicate, like the finest mutton-fat white jade.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.03,
+    "changed_who": 0.02,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c17-p11",
+   "label": "ok",
+   "chinese_source": "「就算是外門最強的司徒長老，也不過才固元二重，怎麼可能突然突破靈海？」",
+   "machine_english": "\"Even Elder Situ, the strongest person in the outer sect, is only at the second level of Gu Yuan. How could he suddenly break through the spiritual sea?\"",
+   "edited_english": "\"Even Elder Situ, the strongest in the outer sect, is only at the second level of Gu Yuan. How could he suddenly break through to the Spiritual Sea?\"",
+   "jev_1_13": {
+    "changed_thing": 0.06,
+    "added_claim": 0.09,
+    "changed_who": 0.03,
+    "changed_logic": 0.1
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c7-p21",
+   "label": "ok",
+   "chinese_source": "鏡中人，劍眉星目，唇紅齒白。",
+   "machine_english": "The person in the mirror has sharp eyebrows and starry eyes, red lips and white teeth.",
+   "edited_english": "The person in the mirror has sharp eyebrows, starry eyes, red lips, and white teeth.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.04,
+    "changed_who": 0.02,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c1-p45",
+   "label": "ok",
+   "chinese_source": "於是，他選擇了躺平。",
+   "machine_english": "So, he chose to lie down.",
+   "edited_english": "So, he chose to lie flat.",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.05,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c13-p116",
+   "label": "ok",
+   "chinese_source": "這一劍，快、准、狠！",
+   "machine_english": "This sword is fast, accurate and ruthless!",
+   "edited_english": "This sword was fast, accurate, and ruthless!",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.12,
+    "changed_who": 0.05,
+    "changed_logic": 0.08
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c20-p111",
+   "label": "ok",
+   "chinese_source": "沒有想像中白髮蒼蒼的老怪，也沒有青面獠牙的邪魔。",
+   "machine_english": "There is no gray-haired old monster as imagined, nor is there a green-faced and fanged demon.",
+   "edited_english": "There was no gray-haired old monster as imagined, nor was there a green-faced and fanged demon.",
+   "jev_1_13": {
+    "changed_thing": 0.02,
+    "added_claim": 0.09,
+    "changed_who": 0.05,
+    "changed_logic": 0.39
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c15-p40",
+   "label": "ok",
+   "chinese_source": "葉玄坐回石凳上，示意江靈伸出手腕。",
+   "machine_english": "Ye Xuan sat back on the stone bench and motioned to Jiang Ling to stretch out his wrist.",
+   "edited_english": "Ye Xuan sat back on the stone bench and motioned for Jiang Ling to extend his wrist.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.03,
+    "changed_who": 0.07,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c5-p95",
+   "label": "ok",
+   "chinese_source": "這一看，他整個人瞬間怔住了。",
+   "machine_english": "At this sight, he was instantly stunned.",
+   "edited_english": "Seeing this, he was instantly stunned.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.03,
+    "changed_who": 0.11,
+    "changed_logic": 0.1
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c8-p25",
+   "label": "ok",
+   "chinese_source": "「就是來通知你一聲，下月初五，咱們這一屆還在世的老傢伙們，打算聚一聚。」",
+   "machine_english": "\"I just want to inform you that on the fifth day of next month, all the old guys who are still alive in our generation are planning to get together.\"",
+   "edited_english": "\"I just want to inform you that on the fifth of next month, all the old men still alive in our generation are planning to gather.\"",
+   "jev_1_13": {
+    "changed_thing": 0.07,
+    "added_claim": 0.04,
+    "changed_who": 0.07,
+    "changed_logic": 0.05
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c8-p90",
+   "label": "ok",
+   "chinese_source": "這可都是潛在的客戶啊。",
+   "machine_english": "These are all potential customers.",
+   "edited_english": "These are all potential clients.",
+   "jev_1_13": {
+    "changed_thing": 0.08,
+    "added_claim": 0.05,
+    "changed_who": 0.03,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c1-p15",
+   "label": "ok",
+   "chinese_source": "他雙手捧著，恭敬地遞到葉玄面前。",
+   "machine_english": "He held it with both hands and respectfully handed it to Ye Xuan.",
+   "edited_english": "He held it with both hands and respectfully offered it to Ye Xuan.",
+   "jev_1_13": {
+    "changed_thing": 0.03,
+    "added_claim": 0.06,
+    "changed_who": 0.05,
+    "changed_logic": 0.03
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c4-p125",
+   "label": "ok",
+   "chinese_source": "靜室內一片死寂，唯有靈氣流動的細微聲響。",
+   "machine_english": "There was deathly silence in the quiet room, with only the faint sound of spiritual energy flowing.",
+   "edited_english": "The quiet room was deathly silent, with only the faint sound of spiritual energy flowing.",
+   "jev_1_13": {
+    "changed_thing": 0.05,
+    "added_claim": 0.04,
+    "changed_who": 0.05,
+    "changed_logic": 0.06
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c14-p119",
+   "label": "ok",
+   "chinese_source": "葉玄笑了笑，伸手握住那隻柔弱無骨的小手。",
+   "machine_english": "Ye Xuan smiled and reached out to hold the weak and boneless hand.",
+   "edited_english": "Ye Xuan smiled and reached out to hold the delicate hand.",
+   "jev_1_13": {
+    "changed_thing": 0.07,
+    "added_claim": 0.1,
+    "changed_who": 0.04,
+    "changed_logic": 0.04
+   }
+  },
+  {
+   "kind": "sample",
+   "id": "c11-p24",
+   "label": "ok",
+   "chinese_source": "前方那劍氣風暴尚未平息，顯然裡面的人正處於修煉的關鍵時刻。",
+   "machine_english": "The sword energy storm in front has not yet subsided, and it is obvious that the people inside are at a critical moment in their cultivation.",
+   "edited_english": "The sword energy storm ahead has not yet subsided, and it is clear that the people inside are at a critical moment in their cultivation.",
+   "jev_1_13": {
+    "changed_thing": 0.04,
+    "added_claim": 0.03,
+    "changed_who": 0.03,
+    "changed_logic": 0.07
+   }
+  }
+ ]
+}

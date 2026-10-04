@@ -323,7 +323,8 @@ class CliTests(unittest.TestCase):
             ],
         )
         self.assertEqual(
-            result["edits"][0]["sentences"], {"edited": 1, "rejected": 0, "skipped": 0}
+            result["edits"][0]["sentences"],
+            {"edited": 1, "rejected": 0, "skipped": 0, "flagged": 0},
         )
 
     def test_unreachable_server_is_a_clean_error(self):

@@ -151,6 +151,8 @@ class Edit:
     sentences_edited: int = 0
     sentences_rejected: int = 0
     sentences_skipped: int = 0
+    # Passed the regex gates, then rejected by the verifier.
+    sentences_flagged: int = 0
 
 
 @dataclass(frozen=True)
@@ -171,6 +173,20 @@ class Client(Protocol):
     def generate(self, system: str, user: str, max_tokens: int) -> str: ...
 
     def close(self) -> None: ...
+
+
+class Verifier(Protocol):
+    """A second check on edits that passed accept_edit.
+
+    `name` goes into the cache key. `check` returns True for each
+    (machine, edited) pair that keeps its meaning and raises ModelError when
+    it cannot answer, which stops the run like a model failure.
+    """
+
+    @property
+    def name(self) -> str: ...
+
+    def check(self, source: str, pairs: list[tuple[str, str]]) -> list[bool]: ...
 
 
 def tokens(text: str) -> int:
@@ -422,7 +438,12 @@ def bind_context(
     return context, packs
 
 
-_COUNT_COLUMNS = ("sentences_edited", "sentences_rejected", "sentences_skipped")
+_COUNT_COLUMNS = (
+    "sentences_edited",
+    "sentences_rejected",
+    "sentences_skipped",
+    "sentences_flagged",
+)
 
 
 class BookDB:
@@ -549,7 +570,7 @@ class BookDB:
             f"""
             insert or replace into cache (
                 key, english, accepted, reason, model, {', '.join(_COUNT_COLUMNS)}
-            ) values (?, ?, ?, ?, ?, ?, ?, ?)
+            ) values (?, ?, ?, ?, ?, {', '.join('?' * len(_COUNT_COLUMNS))})
             """,
             (
                 key,
@@ -563,13 +584,16 @@ class BookDB:
         self.conn.commit()
 
 
-def _cache_key(model: str, num_ctx: int, segment: Segment, earlier: list[str]) -> str:
+def _cache_key(
+    model: str, num_ctx: int, segment: Segment, earlier: list[str], verifier: str = ""
+) -> str:
     payload = {
         "policy": POLICY,
         "system": SYSTEM,
         "temperature": TEMPERATURE,
         "model": model,
         "num_ctx": num_ctx,
+        "verifier": verifier,
         "book_key": segment.book_key,
         "segment_id": segment.segment_id,
         "chapter": segment.chapter,
@@ -594,6 +618,7 @@ def _finish(segment: Segment, pieces: list[str], reasons: list[str], model: str)
         "sentences_edited": reasons.count("edited"),
         "sentences_rejected": reasons.count("fallback"),
         "sentences_skipped": reasons.count("skipped"),
+        "sentences_flagged": reasons.count("flagged"),
     }
     if reasons and all(reason == "unchanged" for reason in reasons):
         english = segment.english
@@ -608,7 +633,7 @@ def _finish(segment: Segment, pieces: list[str], reasons: list[str], model: str)
             english = segment.english
         if "skipped" in reasons:
             reason = "skipped"
-        elif "fallback" in reasons:
+        elif "fallback" in reasons or "flagged" in reasons:
             reason = "fallback"
         else:
             reason = "edited"
@@ -631,7 +656,9 @@ class _Job:
     packs: list[Pack]
 
 
-def _generate(segment: Segment, job: _Job, client: Client) -> Edit:
+def _generate(
+    segment: Segment, job: _Job, client: Client, verifier: Verifier | None = None
+) -> Edit:
     """Send each pack and gate each sentence. Touches no database state."""
     pieces: list[str] = []
     reasons: list[str] = []
@@ -647,18 +674,33 @@ def _generate(segment: Segment, job: _Job, client: Client) -> Edit:
             pieces.extend(pack.pieces)
             reasons.extend(["fallback"] * len(pack.pieces))
             continue
-        for source, output in zip(pack.pieces, parsed, strict=True):
-            if accept_edit(source, output, segment.terms):
-                pieces.append(output)
-                reasons.append("edited" if output.strip() != source.strip() else "unchanged")
-            else:
-                pieces.append(source)
-                reasons.append("fallback")
+        outcomes = [
+            ("edited" if output.strip() != source.strip() else "unchanged")
+            if accept_edit(source, output, segment.terms)
+            else "fallback"
+            for source, output in zip(pack.pieces, parsed, strict=True)
+        ]
+        edited = [i for i, outcome in enumerate(outcomes) if outcome == "edited"]
+        if verifier is not None and edited:
+            verdicts = verifier.check(
+                segment.source, [(pack.pieces[i], parsed[i]) for i in edited]
+            )
+            for i, kept in zip(edited, verdicts, strict=True):
+                if not kept:
+                    outcomes[i] = "flagged"
+        for source, output, outcome in zip(pack.pieces, parsed, outcomes, strict=True):
+            pieces.append(output if outcome in ("edited", "unchanged") else source)
+            reasons.append(outcome)
     return _finish(segment, pieces, reasons, client.model)
 
 
 def _plan_jobs(
-    segments: list[Segment], model: str, db: BookDB, num_ctx: int, edits: list[Edit | None]
+    segments: list[Segment],
+    model: str,
+    db: BookDB,
+    num_ctx: int,
+    edits: list[Edit | None],
+    verifier: str = "",
 ) -> list[_Job]:
     """Ingest every segment in narrative order and fill cached edits.
 
@@ -669,7 +711,7 @@ def _plan_jobs(
     for index, segment in enumerate(segments):
         ordinal = db.ingest(segment)
         earlier = _memory(db, segment, ordinal)
-        key = _cache_key(model, num_ctx, segment, earlier)
+        key = _cache_key(model, num_ctx, segment, earlier, verifier)
         cached = db.get_cached(key, segment.segment_id)
         if cached is not None:
             edits[index] = cached
@@ -691,6 +733,7 @@ def polish(
     num_ctx: int = 4096,
     close_client: bool = False,
     workers: int = 1,
+    verifier: Verifier | None = None,
 ) -> Run:
     """Edit segments. List order is narrative order.
 
@@ -698,13 +741,17 @@ def polish(
     written in list order on the calling thread. After a ModelError no new
     segment starts. Segments already in flight finish and keep their edits,
     and segments never started are marked "not-run".
+
+    A verifier, when given, re-checks every sentence the regex gates accepted
+    as changed; a flagged sentence keeps its machine English.
     """
     if workers < 1:
         raise ValueError("workers must be at least 1")
     try:
         model = client.model
         edits: list[Edit | None] = [None] * len(segments)
-        jobs = iter(_plan_jobs(segments, model, db, num_ctx, edits))
+        verifier_name = verifier.name if verifier is not None else ""
+        jobs = iter(_plan_jobs(segments, model, db, num_ctx, edits, verifier_name))
         error: str | None = None
         with ThreadPoolExecutor(max_workers=workers) as pool:
             window: deque[tuple[_Job, Future[Edit]]] = deque()
@@ -714,7 +761,8 @@ def polish(
                     job = next(jobs, None)
                     if job is None:
                         return
-                    window.append((job, pool.submit(_generate, segments[job.index], job, client)))
+                    future = pool.submit(_generate, segments[job.index], job, client, verifier)
+                    window.append((job, future))
 
             fill()
             while window:

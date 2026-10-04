@@ -21,6 +21,7 @@ from bookpolish.engine import (
     polish,
     preview,
 )
+from bookpolish.verify import JevVerifier
 
 
 def _default_db() -> Path:
@@ -47,6 +48,7 @@ def _dump(run: Run) -> dict:
                     "edited": edit.sentences_edited,
                     "rejected": edit.sentences_rejected,
                     "skipped": edit.sentences_skipped,
+                    "flagged": edit.sentences_flagged,
                 },
             }
             for edit in run.edits
@@ -73,6 +75,13 @@ def main(argv: list[str] | None = None) -> int:
         default=1,
         help="requests in flight at once; match the server's parallel slots",
     )
+    run.add_argument(
+        "--verify",
+        choices=["jev"],
+        help="re-check accepted edits with TypeSafe Jev (sends text to api.typesafe.ai; "
+        "needs TYPESAFE_API_KEY)",
+    )
+    run.add_argument("--verify-threshold", type=float, default=0.7)
     args = parser.parse_args(argv)
     if args.ctx < 1:
         print("ctx must be positive", file=sys.stderr)
@@ -90,6 +99,9 @@ def main(argv: list[str] | None = None) -> int:
                 print("\n---\n")
             return 0
         try:
+            verifier = (
+                JevVerifier(threshold=args.verify_threshold) if args.verify == "jev" else None
+            )
             client = Server(args.host, args.model, timeout=args.timeout)
         except (ModelError, ValueError) as exc:
             print(exc, file=sys.stderr)
@@ -101,7 +113,10 @@ def main(argv: list[str] | None = None) -> int:
             num_ctx=args.ctx,
             close_client=True,
             workers=args.workers,
+            verifier=verifier,
         )
+        if verifier is not None:
+            verifier.close()
     payload = json.dumps(_dump(result), ensure_ascii=False, indent=2)
     if args.output:
         Path(args.output).write_text(payload + "\n", encoding="utf-8")

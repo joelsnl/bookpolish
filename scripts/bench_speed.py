@@ -27,6 +27,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from bookpolish.engine import BookDB, Server, load_chapter, polish  # noqa: E402
+from bookpolish.verify import JevVerifier  # noqa: E402
 
 SERVER = next(
     (Path.home() / ".huaepub" / "polish" / "llama-server").glob("*/llama-server.exe"), None
@@ -70,6 +71,7 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--model", required=True)
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--files", nargs="*", default=[str(p) for p in DEFAULT_FILES])
+    parser.add_argument("--verify", action="store_true", help="re-check edits with Jev")
     args = parser.parse_args(argv)
     out = ROOT / "_run" / "bench" / "results" / args.label
     out.mkdir(parents=True, exist_ok=True)
@@ -80,8 +82,9 @@ def main(argv: list[str]) -> int:
     try:
         wait_ready(proc, log)
         reasons: Counter[str] = Counter()
-        paragraphs = words = 0
+        paragraphs = words = flagged = 0
         errors = []
+        verifier = JevVerifier() if args.verify else None
         start = time.time()
         for name in args.files:
             segments = load_chapter(Path(name))
@@ -89,10 +92,12 @@ def main(argv: list[str]) -> int:
             db_path.unlink(missing_ok=True)
             with BookDB(db_path) as db:
                 run = polish(segments, client=Server("http://127.0.0.1:8080", "bench"),
-                             db=db, workers=args.workers, close_client=True)
+                             db=db, workers=args.workers, close_client=True,
+                             verifier=verifier)
             if run.error:
                 errors.append(run.error)
             reasons.update(edit.reason for edit in run.edits)
+            flagged += sum(edit.sentences_flagged for edit in run.edits)
             paragraphs += len(segments)
             words += sum(len(s.english.split()) for s in segments)
             (out / (Path(name).stem + "-out.json")).write_text(
@@ -108,6 +113,7 @@ def main(argv: list[str]) -> int:
         "extra_flags": extra, "seconds": round(seconds, 1), "paragraphs": paragraphs,
         "paragraphs_per_min": round(paragraphs / seconds * 60, 1),
         "words_per_min": round(words / seconds * 60), "reasons": dict(reasons),
+        "verify": args.verify, "sentences_flagged": flagged,
         "errors": errors, **server_rates(log),
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=1), encoding="utf-8")

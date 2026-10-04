@@ -25,7 +25,7 @@ from urllib.parse import urlparse
 SLACK = 128
 TEMPERATURE = 0.2
 EARLIER_LIMIT = 2
-POLICY = "bookpolish-3"
+POLICY = "bookpolish-4"
 RETRY_DELAY = 2.0
 _RETRY_STATUS = frozenset({429, 500, 502, 503, 504})
 
@@ -69,8 +69,16 @@ _CLOSED = frozenset(
     how why where however suddenly meanwhile finally still just not no yes oh ah
     well now once during while although though because since until chapter volume
     said says
+    therefore upon okay ok furthermore moreover besides actually clearly thus hence
+    indeed instead otherwise perhaps maybe anyway alright even also so of is does
+    don let please such soon whether none another um uh hmm thank thanks
+    i me my we us our you your yours
     """.split()
 )
+# Openers and pronouns above are not names: "Therefore" -> "So" or "Upon hearing"
+# -> "Hearing" used to fail the name lock (95 of 886 rejections in book 111022).
+# Pronouns have their own person gate. Content words that open a sentence
+# ("Sending", "Faced") stay locked: swapping them is where drift hides.
 _STOP = frozenset(
     "a an the and or but if as at by for from in into of on to with did do does".split()
 )

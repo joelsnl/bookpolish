@@ -149,6 +149,19 @@ class GateTests(unittest.TestCase):
             )
         )
 
+    def test_accepts_reworded_sentence_opener(self):
+        # Openers were locked as names, so these fell back to the machine line.
+        self.assertTrue(accept_edit("Therefore, Mira left the hall.", "So, Mira left the hall."))
+        self.assertTrue(
+            accept_edit("Upon hearing this, Mira smiled.", "Hearing this, Mira smiled.")
+        )
+
+    def test_sentence_opening_name_stays_locked(self):
+        self.assertFalse(accept_edit("Mira waited by the gate.", "Nora waited by the gate."))
+        self.assertFalse(
+            accept_edit("Sending messages is the safest way.", "Teleporting is the safest way.")
+        )
+
     def test_accepts_dropped_first_person_narration(self):
         self.assertTrue(
             accept_edit(

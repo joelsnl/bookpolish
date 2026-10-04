@@ -25,7 +25,7 @@ from urllib.parse import urlparse
 SLACK = 128
 TEMPERATURE = 0.2
 EARLIER_LIMIT = 2
-POLICY = "bookpolish-2"
+POLICY = "bookpolish-3"
 RETRY_DELAY = 2.0
 _RETRY_STATUS = frozenset({429, 500, 502, 503, 504})
 
@@ -50,8 +50,8 @@ _NEGATION = re.compile(r"\bnot\b|\bnever\b|\bcannot\b|n't\b", re.IGNORECASE)
 # not ..." keeps the negation count and flips the claim.
 _CONDITIONAL = re.compile(r"(?<!\bas )\bif\b|\bunless\b", re.IGNORECASE)
 # A grammatical person may appear or vanish in a light edit ("I saw X" -> "X").
-# Losing one person while gaining another ("you can only wait" -> "I can only
-# wait") moves the viewpoint.
+# One person's count falling while another's rises ("you can only wait" -> "I
+# can only wait", "you are my star" -> "I am my star") moves the viewpoint.
 _PERSONS = {
     "first": re.compile(r"\b(?:i|me|my|mine|myself)\b", re.IGNORECASE),
     "second": re.compile(r"\b(?:you|your|yours|yourself|yourselves)\b", re.IGNORECASE),
@@ -254,13 +254,15 @@ def _overlap_ok(source: str, output: str) -> bool:
     return hits / len(src) >= 0.35
 
 
-def _persons(text: str) -> set[str]:
-    return {name for name, pattern in _PERSONS.items() if pattern.search(text)}
+def _persons(text: str) -> dict[str, int]:
+    return {name: len(pattern.findall(text)) for name, pattern in _PERSONS.items()}
 
 
 def _person_swapped(source: str, output: str) -> bool:
     before, after = _persons(source), _persons(output)
-    return bool(before - after) and bool(after - before)
+    lost = any(after[name] < before[name] for name in _PERSONS)
+    gained = any(after[name] > before[name] for name in _PERSONS)
+    return lost and gained
 
 
 def accept_edit(source: str, output: str, terms: tuple[Term, ...] = ()) -> bool:

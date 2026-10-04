@@ -141,6 +141,14 @@ class GateTests(unittest.TestCase):
             )
         )
 
+    def test_rejects_person_swap_when_both_persons_remain(self):
+        self.assertFalse(
+            accept_edit(
+                '"When I finish copying, I let you go."',
+                '"When you finish copying, I will let you go."',
+            )
+        )
+
     def test_accepts_dropped_first_person_narration(self):
         self.assertTrue(
             accept_edit(

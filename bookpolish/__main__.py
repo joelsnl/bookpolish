@@ -100,6 +100,12 @@ def _add_judge_args(parser: argparse.ArgumentParser, required: bool) -> None:
     )
     parser.add_argument("--verify-model", default="", help="judge name; keys cached verdicts")
     parser.add_argument(
+        "--verify-questions",
+        default="",
+        help="chat judge only: comma list from changed_thing, added_claim, changed_who, "
+        "changed_logic (default changed_thing,added_claim)",
+    )
+    parser.add_argument(
         "--verify-threshold",
         type=float,
         default=None,
@@ -121,10 +127,16 @@ def _write(run: Run, output: str | None) -> int:
 
 
 def _judge(args: argparse.Namespace) -> ChatLogprobVerifier | SystemOneVerifier:
-    kind = ChatLogprobVerifier if args.verify_kind == "chat" else SystemOneVerifier
-    if args.verify_threshold is None:
-        return kind(args.verify, args.verify_model)
-    return kind(args.verify, args.verify_model, threshold=args.verify_threshold)
+    options: dict = {}
+    if args.verify_threshold is not None:
+        options["threshold"] = args.verify_threshold
+    if args.verify_kind == "systemone":
+        if args.verify_questions:
+            raise ValueError("--verify-questions applies to --verify-kind chat only")
+        return SystemOneVerifier(args.verify, args.verify_model, **options)
+    if args.verify_questions:
+        options["questions"] = tuple(q.strip() for q in args.verify_questions.split(","))
+    return ChatLogprobVerifier(args.verify, args.verify_model, **options)
 
 
 def _cmd_run(args: argparse.Namespace) -> int:

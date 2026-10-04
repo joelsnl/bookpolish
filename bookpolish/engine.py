@@ -21,7 +21,7 @@ from urllib.parse import urlparse
 SLACK = 128
 TEMPERATURE = 0.2
 EARLIER_LIMIT = 2
-POLICY = "bookpolish-1"
+POLICY = "bookpolish-2"
 
 SYSTEM = """Copy-edit only the numbered REPLACE spans of this novel's machine English.
 Preserve meaning, names, quantities, negation, speaker, viewpoint, and voice.
@@ -40,8 +40,22 @@ _PRONOUN = re.compile(
     re.IGNORECASE,
 )
 _NEGATION = re.compile(r"\bnot\b|\bnever\b|\bcannot\b|n't\b", re.IGNORECASE)
+# "as if" is a comparison, not a condition. Dropping "if" from "if Heaven had
+# not ..." keeps the negation count and flips the claim.
+_CONDITIONAL = re.compile(r"(?<!\bas )\bif\b|\bunless\b", re.IGNORECASE)
+# A grammatical person may appear or vanish in a light edit ("I saw X" -> "X").
+# Losing one person while gaining another ("you can only wait" -> "I can only
+# wait") moves the viewpoint.
+_PERSONS = {
+    "first": re.compile(r"\b(?:i|me|my|mine|myself)\b", re.IGNORECASE),
+    "second": re.compile(r"\b(?:you|your|yours|yourself|yourselves)\b", re.IGNORECASE),
+    "plural": re.compile(r"\b(?:we|us|our|ours|ourselves)\b", re.IGNORECASE),
+}
 _LEAK = re.compile(r"\[(?:\d+|n)\]|KEEP before|KEEP after|\bREPLACE\s*:", re.IGNORECASE)
 _CJK = re.compile(r"[\u3400-\u9fff]")
+# Split after a closing quote too, so a quoted sentence is not cut in half.
+_SENTENCE_END = re.compile(r"(?<=[.!?])\s+|(?<=[.!?][\"\u201d\u2019])\s+")
+_QUOTES = re.compile(r"[\"\u201c\u201d]")
 _CLOSED = frozenset(
     """
     the a an he she it they his her their them him then when after before but and
@@ -153,8 +167,20 @@ def request_cost(context: str, pieces: list[str] | tuple[str, ...]) -> int:
 def _sentences(text: str) -> list[str]:
     # ponytail: splits on .!? so "Mr. Kai" becomes two pieces. Use a real
     # sentence splitter if that shows up in a chapter.
-    parts = [part for part in re.split(r"(?<=[.!?])\s+", text.strip()) if part]
-    return parts or ([text.strip()] if text.strip() else [])
+    # A quotation stays whole: cutting it leaves a fragment with one quote mark,
+    # and models close it, turning one utterance into two.
+    parts: list[str] = []
+    pending = ""
+    for part in _SENTENCE_END.split(text.strip()):
+        if not part:
+            continue
+        pending = f"{pending} {part}" if pending else part
+        if len(_QUOTES.findall(pending)) % 2 == 0:
+            parts.append(pending)
+            pending = ""
+    if pending:
+        parts.append(pending)
+    return parts
 
 
 def _pronouns(text: str) -> tuple[str, ...]:
@@ -203,13 +229,18 @@ def _overlap_ok(source: str, output: str) -> bool:
     return hits / len(src) >= 0.35
 
 
-def _sentence_count(text: str) -> int:
-    parts = [part for part in re.split(r"(?<=[.!?])\s+", text.strip()) if part.strip()]
-    return max(1, len(parts)) if text.strip() else 0
+def _persons(text: str) -> set[str]:
+    return {name for name, pattern in _PERSONS.items() if pattern.search(text)}
+
+
+def _person_swapped(source: str, output: str) -> bool:
+    before, after = _persons(source), _persons(output)
+    return bool(before - after) and bool(after - before)
 
 
 def accept_edit(source: str, output: str, terms: tuple[Term, ...] = ()) -> bool:
-    """True when output keeps names, quantities, pronouns, negation, and shape."""
+    """True when output keeps names, quantities, pronouns, person, negation,
+    conditionals, and shape."""
     text = (output or "").strip()
     raw = (source or "").strip()
     if not text or not raw:
@@ -219,7 +250,7 @@ def accept_edit(source: str, output: str, terms: tuple[Term, ...] = ()) -> bool:
         return False
     if _LEAK.search(text):
         return False
-    if _sentence_count(text) > _sentence_count(raw) + 1:
+    if len(_sentences(text)) > len(_sentences(raw)) + 1:
         return False
     folded_src = " ".join(raw.split())
     folded_out = " ".join(text.split())
@@ -228,11 +259,16 @@ def accept_edit(source: str, output: str, terms: tuple[Term, ...] = ()) -> bool:
     end = raw.rstrip()[-1:]
     if end in ".!?" and text.rstrip()[-1:] not in ".!?\"'”’)":
         return False
-    if text.count('"') % 2 == 1:
+    # A span can open a quote that a later span closes. Keep the parity.
+    if len(_QUOTES.findall(text)) % 2 != len(_QUOTES.findall(raw)) % 2:
         return False
     if _pronouns(raw) != _pronouns(text):
         return False
     if len(_NEGATION.findall(raw)) != len(_NEGATION.findall(text)):
+        return False
+    if len(_CONDITIONAL.findall(raw)) != len(_CONDITIONAL.findall(text)):
+        return False
+    if _person_swapped(raw, text):
         return False
     if _quantities(raw) != _quantities(text):
         return False
@@ -504,7 +540,12 @@ def _finish(segment: Segment, pieces: list[str], reasons: list[str], model: str)
         reason = "unchanged"
         accepted = True
     else:
-        english = pieces[0] if len(pieces) == 1 else " ".join(pieces)
+        # Rejoining split sentences normalizes whitespace, so only do it when a
+        # sentence actually changed.
+        if "edited" in reasons:
+            english = pieces[0] if len(pieces) == 1 else " ".join(pieces)
+        else:
+            english = segment.english
         if "skipped" in reasons:
             reason = "skipped"
         elif "fallback" in reasons:

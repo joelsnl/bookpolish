@@ -16,6 +16,7 @@ from bookpolish.engine import (  # noqa: E402
     Segment,
     Server,
     Term,
+    _sentences,
     accept_edit,
     context_text,
     load_chapter,
@@ -107,6 +108,69 @@ class GateTests(unittest.TestCase):
                 (MIRA,),
             )
         )
+
+    def test_rejects_dropped_conditional(self):
+        # Both report runs flipped this fate note while keeping one "not".
+        self.assertFalse(
+            accept_edit(
+                "If heaven had not given birth to me, Qi Muchun, the way of "
+                "swordsmanship would be like a long night!",
+                "Heaven did not give birth to me, Qi Muchun, the way of "
+                "swordsmanship would be like a long night!",
+            )
+        )
+
+    def test_rejects_invented_conditional(self):
+        self.assertFalse(accept_edit('"Here you go, take it."', '"Take it if you want it."'))
+
+    def test_accepts_added_as_if(self):
+        self.assertTrue(
+            accept_edit(
+                "Zhang An was granted amnesty and quickly pushed the storage bag away.",
+                "Zhang An, as if granted amnesty, quickly pushed the storage bag away.",
+            )
+        )
+
+    def test_rejects_person_swap(self):
+        self.assertFalse(
+            accept_edit(
+                "If you want to invest in this girl, you can only wait until tomorrow.",
+                "If I want to invest in this girl, I can only wait until tomorrow.",
+            )
+        )
+
+    def test_accepts_dropped_first_person_narration(self):
+        self.assertTrue(
+            accept_edit(
+                "I saw a beautiful figure walking in the backlight of the setting sun.",
+                "A beautiful figure walked in the backlight of the setting sun.",
+            )
+        )
+
+    def test_rejects_stray_quote(self):
+        self.assertFalse(
+            accept_edit(
+                '"What kind of grass is this? It\'s so amazing!"',
+                '"What kind of grass is this?" It\'s so amazing!"',
+            )
+        )
+
+    def test_quotation_is_one_span(self):
+        self.assertEqual(
+            _sentences('"Don\'t squeeze! I\'ll get upset!" Mira said. She left.'),
+            ['"Don\'t squeeze! I\'ll get upset!"', "Mira said.", "She left."],
+        )
+
+    def test_fallback_keeps_original_whitespace(self):
+        english = "Mira waited.\n\nShe left."
+
+        def flipped(system, user, max_tokens):
+            del system, user, max_tokens
+            return "[1] Mira waited.\n[2] He left."
+
+        run = polish([Segment("book", "s", 1, english)], client=Fake(flipped), db=self.db)
+        self.assertEqual(run.edits[0].reason, "fallback")
+        self.assertEqual(run.edits[0].english, english)
 
     def test_labels_map_by_id(self):
         text = "[2] Jiang Kai looked down.\n[1] Jiang Kai looked up."

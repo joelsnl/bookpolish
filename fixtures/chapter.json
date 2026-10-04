@@ -1,0 +1,19 @@
+{
+  "book_key": "demo-mira",
+  "segments": [
+    {
+      "id": "c1-p1",
+      "chapter": 1,
+      "source": "米拉睁开了眼睛。",
+      "english": "Mira's eyes narrowed as she opened the sealed door.",
+      "terms": [{ "canonical": "Mira" }]
+    },
+    {
+      "id": "c1-p2",
+      "chapter": 1,
+      "source": "江凯数了三块灵石。",
+      "english": "Jiang Kai counted three spirit stones.",
+      "terms": [{ "canonical": "Jiang Kai", "aliases": ["Jiang"] }]
+    }
+  ]
+}

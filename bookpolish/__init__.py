@@ -18,13 +18,14 @@ from bookpolish.engine import (
     preview,
     verify_edits,
 )
-from bookpolish.verify import SystemOneVerifier
+from bookpolish.verify import ChatLogprobVerifier, SystemOneVerifier
 
 __version__ = "0.1.0"
 
 __all__ = [
     "POLICY",
     "BookDB",
+    "ChatLogprobVerifier",
     "Edit",
     "SystemOneVerifier",
     "ModelError",

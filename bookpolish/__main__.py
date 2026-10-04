@@ -27,7 +27,7 @@ from bookpolish.engine import (
     preview,
     verify_edits,
 )
-from bookpolish.verify import SystemOneVerifier
+from bookpolish.verify import ChatLogprobVerifier, SystemOneVerifier
 
 
 def _default_db() -> Path:
@@ -88,11 +88,23 @@ def _add_judge_args(parser: argparse.ArgumentParser, required: bool) -> None:
         "--verify",
         metavar="URL",
         required=required,
-        help="System One judge server (POST /v1/systemone), e.g. a local Kev, Laya, or "
-        "Winnow at http://127.0.0.1:8009; edited sentences are sent to it",
+        help="judge server; edited sentences are sent to it. With --verify-kind chat this "
+        "can be the editor's own llama-server (no extra memory)",
+    )
+    parser.add_argument(
+        "--verify-kind",
+        choices=["chat", "systemone"],
+        default="chat",
+        help="chat: read P(yes) from a chat model's logprobs; systemone: POST /v1/systemone "
+        "(Kev, Laya, Winnow, Jev)",
     )
     parser.add_argument("--verify-model", default="", help="judge name; keys cached verdicts")
-    parser.add_argument("--verify-threshold", type=float, default=0.7)
+    parser.add_argument(
+        "--verify-threshold",
+        type=float,
+        default=None,
+        help="flag at or above this probability (default 0.5 chat, 0.7 systemone)",
+    )
     parser.add_argument("--verify-workers", type=int, default=4)
 
 
@@ -108,8 +120,11 @@ def _write(run: Run, output: str | None) -> int:
     return 0
 
 
-def _judge(args: argparse.Namespace) -> SystemOneVerifier:
-    return SystemOneVerifier(args.verify, args.verify_model, args.verify_threshold)
+def _judge(args: argparse.Namespace) -> ChatLogprobVerifier | SystemOneVerifier:
+    kind = ChatLogprobVerifier if args.verify_kind == "chat" else SystemOneVerifier
+    if args.verify_threshold is None:
+        return kind(args.verify, args.verify_model)
+    return kind(args.verify, args.verify_model, threshold=args.verify_threshold)
 
 
 def _cmd_run(args: argparse.Namespace) -> int:

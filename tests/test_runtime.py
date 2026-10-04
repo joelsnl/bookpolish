@@ -401,7 +401,7 @@ class TwoPassCliTests(FakeChatServer):
                 [
                     "verify", str(chapter), str(first), "-o", str(final), "--db", db,
                     "--verify", f"http://127.0.0.1:{judge.server_address[1]}",
-                    "--verify-model", "fake-judge",
+                    "--verify-kind", "systemone", "--verify-model", "fake-judge",
                 ]
             )
         finally:

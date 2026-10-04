@@ -2,12 +2,14 @@
 """Score a System One judge (Kev, Laya, Jev) on evals/judge_set.json.
 
 Usage:
-    python scripts/eval_judge.py URL MODEL [--set evals/judge_set.json]
+    python scripts/eval_judge.py URL MODEL [--kind systemone|chat] [--set PATH]
 
-Sends every item through SystemOneVerifier's questions and reports, per
-threshold, how many drift items were flagged (recall) and how many ok items
-were flagged (false flags), plus latency. Jev 1.13's stored answers are scored
-alongside for comparison. Items labelled "unsure" are left out of both rates.
+Asks every item all four judge questions through the product verifier class
+(SystemOneVerifier, or ChatLogprobVerifier for a chat model's logprobs) and
+reports, per threshold, how many drift items were flagged (recall) and how many
+ok items were flagged (false flags), plus ranking quality (AUC) per question.
+Jev 1.13's stored answers are scored alongside for comparison. Items labelled
+"unsure" are left out of both rates.
 """
 
 from __future__ import annotations
@@ -21,9 +23,31 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from bookpolish.verify import SystemOneVerifier  # noqa: E402
+from bookpolish.verify import (  # noqa: E402
+    QUESTIONS,
+    ChatLogprobVerifier,
+    SystemOneVerifier,
+)
 
 THRESHOLDS = (0.5, 0.6, 0.7, 0.8, 0.9)
+
+
+def auc(drift: list[float], ok: list[float]) -> float:
+    pairs = sum((d > o) + 0.5 * (d == o) for d in drift for o in ok)
+    return pairs / (len(drift) * len(ok))
+
+
+def report_auc(items: list[dict], answers: list[dict[str, float]]) -> None:
+    for key in (*QUESTIONS, "max", "thing|claim"):
+        if key == "max":
+            pick = lambda a: max(a.values())  # noqa: E731
+        elif key == "thing|claim":
+            pick = lambda a: max(a["changed_thing"], a["added_claim"])  # noqa: E731
+        else:
+            pick = lambda a, k=key: a[k]  # noqa: E731
+        drift = [pick(a) for it, a in zip(items, answers, strict=True) if it["label"] == "drift"]
+        ok = [pick(a) for it, a in zip(items, answers, strict=True) if it["label"] == "ok"]
+        print(f"  AUC {key:14} {auc(drift, ok):.3f}")
 
 
 def table(name: str, items: list[dict], scores: list[float]) -> None:
@@ -43,22 +67,37 @@ def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(prog="eval_judge")
     parser.add_argument("url")
     parser.add_argument("model")
+    parser.add_argument("--kind", choices=["systemone", "chat"], default="systemone")
     parser.add_argument("--set", default=str(ROOT / "evals" / "judge_set.json"))
     args = parser.parse_args(argv)
     items = json.loads(Path(args.set).read_text(encoding="utf-8"))["items"]
-    judge = SystemOneVerifier(args.url, args.model)
-    states = [
-        {key: item[key] for key in ("chinese_source", "machine_english", "edited_english")}
-        for item in items
-    ]
     start = time.time()
-    try:
-        answers = list(judge._pool.map(judge._ask, states))
-    finally:
-        judge.close()
+    if args.kind == "systemone":
+        judge = SystemOneVerifier(args.url, args.model)
+        states = [
+            {key: item[key] for key in ("chinese_source", "machine_english", "edited_english")}
+            for item in items
+        ]
+        try:
+            answers = list(judge._pool.map(judge._ask, states))
+        finally:
+            judge.close()
+    else:
+        judge = ChatLogprobVerifier(args.url, args.model, questions=tuple(QUESTIONS))
+        jobs = [(i, q) for i in range(len(items)) for q in QUESTIONS]
+        try:
+            scores = list(judge._pool.map(lambda job: judge.p_yes(
+                items[job[0]]["chinese_source"], items[job[0]]["machine_english"],
+                items[job[0]]["edited_english"], job[1]), jobs))
+        finally:
+            judge.close()
+        answers = [{} for _ in items]
+        for (i, q), score in zip(jobs, scores, strict=True):
+            answers[i][q] = score
     seconds = time.time() - start
     print(f"{args.model}: {len(items)} items in {seconds:.1f}s "
           f"({seconds / len(items) * 1000:.0f} ms each, 8 in flight)")
+    report_auc(items, answers)
     table(args.model, items, [max(a.values()) for a in answers])
     table("jev-1.13 (stored)", items, [max(it["jev_1_13"].values()) for it in items])
     out = Path(args.set).with_name(f"judge_{args.model.replace('/', '_')}.json")

@@ -14,7 +14,11 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from bookpolish.engine import BookDB, ModelError, Segment, polish, verify_edits  # noqa: E402
-from bookpolish.verify import HOSTED_JEV, SystemOneVerifier  # noqa: E402
+from bookpolish.verify import (  # noqa: E402
+    HOSTED_JEV,
+    ChatLogprobVerifier,
+    SystemOneVerifier,
+)
 
 
 class Editor:
@@ -184,6 +188,67 @@ class SystemOneVerifierTests(unittest.TestCase):
             SystemOneVerifier("http://127.0.0.1:8009", "kev-0.8b").name,
             SystemOneVerifier("http://127.0.0.1:8009", "laya").name,
             SystemOneVerifier("http://127.0.0.1:8009", "kev-0.8b", threshold=0.8).name,
+        }
+        self.assertEqual(len(names), 3)
+
+
+
+def logprob_reply(tokens: dict[str, float]):
+    tops = [{"token": t, "logprob": lp} for t, lp in tokens.items()]
+    return {"choices": [{"logprobs": {"content": [{"top_logprobs": tops}]}}]}
+
+
+class ChatLogprobVerifierTests(unittest.TestCase):
+    def setUp(self):
+        self.judge = ChatLogprobVerifier("http://127.0.0.1:8080", "gemma-e4b", parallel=2)
+        self.asked: list[dict] = []
+
+    def tearDown(self):
+        self.judge.close()
+
+    def answer(self, tokens):
+        def post(path, body):
+            self.asked.append(body)
+            return logprob_reply(tokens)
+
+        self.judge._post = post
+
+    def test_reads_p_yes_from_logprobs(self):
+        self.answer({" Yes": -0.1, "No": -2.4})
+        self.assertAlmostEqual(self.judge.p_yes("源", "a", "b", "added_claim"), 0.909, places=3)
+
+    def test_flags_when_any_question_reaches_threshold(self):
+        self.answer({"Yes": -0.69, "No": -0.69})  # exactly 0.5
+        self.assertEqual(self.judge.check("源", [("a", "b")]), [False])
+        self.answer({"Yes": -3.0, "No": -0.05})
+        self.assertEqual(self.judge.check("源", [("a", "b")]), [True])
+
+    def test_unsure_answer_keeps_the_machine_line(self):
+        self.answer({"Maybe": -0.1})
+        self.assertEqual(self.judge.check("源", [("a", "b")]), [False])
+
+    def test_asks_one_token_per_question(self):
+        self.answer({"No": -0.01})
+        self.judge.check("源", [("a", "b"), ("c", "d")])
+        self.assertEqual(len(self.asked), 4)
+        self.assertTrue(all(body["max_tokens"] == 1 for body in self.asked))
+
+    def test_missing_logprobs_is_a_model_error(self):
+        self.judge._post = lambda path, body: {"choices": [{}]}
+        with self.assertRaises(ModelError):
+            self.judge.p_yes("源", "a", "b", "added_claim")
+
+    def test_rejects_unknown_questions(self):
+        with self.assertRaises(ValueError):
+            ChatLogprobVerifier("http://127.0.0.1:8080", "m", questions=("vibes",))
+
+    def test_name_tracks_questions_and_threshold(self):
+        names = {
+            self.judge.name,
+            ChatLogprobVerifier("http://127.0.0.1:8080", "gemma-e4b", threshold=0.6).name,
+            ChatLogprobVerifier(
+                "http://127.0.0.1:8080", "gemma-e4b", questions=("changed_thing",)
+            ).name,
         }
         self.assertEqual(len(names), 3)
 
